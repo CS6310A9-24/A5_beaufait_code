@@ -53,6 +53,7 @@ public class Queue {
         } else {
             Main.buses.get(bus_id).setRouteIndex((Main.buses.get(bus_id).getRouteIndex() + 1));
         }
+        double efficiency = Main.system_efficiency();
         return;
     }
 }
