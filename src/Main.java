@@ -8,6 +8,12 @@ public class Main {
     public static Map<Integer, Bus> buses = new HashMap();
     public static Map<Integer,Stop> stops = new HashMap();
     public static Map<Integer,Route> routes = new HashMap();
+    public static double consts_speed = 1.0;
+    public static double consts_waiting = 1.0;
+    public static double consts_capacity = 1.0;
+    public static double consts_buses = 1.0;
+    public static double consts_combined = 1.0;
+
     public static void main(String[] args) {
         // Initialize variables
         int event_index = -1;
@@ -86,5 +92,31 @@ public class Main {
             // Step 6: Update system state and generate new events as needed.
             queue.updateEventExecutionTimes(queue.currentEventId, next_time);
         }
+    }
+    private static int waiting_passengers(){
+        int total_passengers = 0;
+        int num_passengers;
+        for (Map.Entry<Integer, Stop> stopEntry: stops.entrySet()){
+           num_passengers = stops.get(stopEntry.getKey()).getNumPassengersWaiting();
+           total_passengers += num_passengers;
+        }
+        return total_passengers;
+    }
+    private static double bus_cost(){
+        double total_cost = 0;
+        double cost;
+        for (Map.Entry<Integer, Bus> busEntry: buses.entrySet()){
+            cost = consts_speed *(buses.get(busEntry.getKey()).getAvgSpeed()) +
+                   consts_capacity * (buses.get(busEntry.getKey()).getMaxCapacity());
+            total_cost += cost;
+        }
+        return total_cost;
+    }
+    public static double system_efficiency(){
+        int efficiency_passengers = waiting_passengers();
+        double efficiency_cost = bus_cost();
+        double efficiency = (consts_waiting * efficiency_passengers) + (consts_buses * efficiency_cost) +
+                (consts_combined * efficiency_passengers * efficiency_cost);
+        return efficiency;
     }
 }
