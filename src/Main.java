@@ -26,13 +26,8 @@ public class Main {
                 tokens = userCommandLine.split(DELIMITER);
                 // Set up scenario.
                 switch (tokens[0]) {
-                    case "add_depot":
-                        int stop_index = Integer.parseInt(tokens[1]);
-                        stops.put(stop_index, new Stop(Integer.parseInt(tokens[1]), tokens[2],
-                                                       Double.parseDouble(tokens[3]), Double.parseDouble(tokens[4])));
-                        break;
                     case "add_stop":
-                        stop_index = Integer.parseInt((tokens[1]));
+                        int stop_index = Integer.parseInt((tokens[1]));
                         stops.put(stop_index, new Stop(Integer.parseInt(tokens[1]), tokens[2],
                                                        Integer.parseInt(tokens[3]), Double.parseDouble(tokens[4]),
                                                        Double.parseDouble(tokens[5])));

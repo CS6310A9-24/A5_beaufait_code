@@ -16,15 +16,6 @@ public class Stop {
         this.numNewPassengerArrivals = 0;
         this.numPassengerDepartures = 0;
     }
-    // Stop-Depot Constructor
-    public Stop(int depot_id, String depot_name, double depot_latitude, double depot_longitude) {
-        this.id = depot_id;
-        this.name = depot_name;
-        this.numPassengersWaiting = 0;
-        this.location = new Location(depot_latitude, depot_longitude);
-        this.numNewPassengerArrivals = 0;
-        this.numPassengerDepartures = 0;
-    }
     // Access methods
     public int getId() {
         return id;
