@@ -42,6 +42,10 @@ public class Bus {
     public int getRouteIndex() {
         return this.routeIndex;
     }
+    public Stop getCurrentStop() {
+        int current_stop_id = Main.routes.get(this.routeId).getStopIdByIndex(this.routeIndex);
+        return Main.stops.get(current_stop_id);
+    }
     public int getNumPassengersRiding() {
         return this.numPassengersRiding;
     }
