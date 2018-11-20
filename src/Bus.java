@@ -33,7 +33,7 @@ public class Bus {
         this.initalFuel = intial_fuel;
         this.fuelCapacity = fuel_capacity;
         this.avgSpeed = speed;
-        this.stopId = Main.routes.get(this.routeId).getStopIdByIndex(this.routeIndex);
+        this.stopId = GUI.routes.get(this.routeId).getStopIdByIndex(this.routeIndex);
     }
     // Access methods
     public int getRouteId() {
@@ -52,11 +52,11 @@ public class Bus {
         return this.avgSpeed;
     }
     public int getNextStop() {
-        int route_size = Main.routes.get(this.routeId).getListStopIds().size();
+        int route_size = GUI.routes.get(this.routeId).getListStopIds().size();
         if (this.routeIndex == (route_size - 1)) {
-            return Main.routes.get(this.routeId).getStopIdByIndex((0));
+            return GUI.routes.get(this.routeId).getStopIdByIndex((0));
         } else {
-            return Main.routes.get(this.routeId).getStopIdByIndex((this.routeIndex + 1));
+            return GUI.routes.get(this.routeId).getStopIdByIndex((this.routeIndex + 1));
         }
     }
     public void setRouteIndex(int index){
@@ -68,16 +68,16 @@ public class Bus {
     public double calculateDistance() {
         int current_stopID, next_stopID;
         double [] current_location, next_location;
-        int route_size = Main.routes.get(this.routeId).getListStopIds().size();
+        int route_size = GUI.routes.get(this.routeId).getListStopIds().size();
         if (this.routeIndex == route_size - 1) {
-            current_stopID = Main.routes.get(this.routeId).getStopIdByIndex(this.routeIndex);
-            next_stopID = Main.routes.get(this.routeId).getStopIdByIndex((0));
+            current_stopID = GUI.routes.get(this.routeId).getStopIdByIndex(this.routeIndex);
+            next_stopID = GUI.routes.get(this.routeId).getStopIdByIndex((0));
         } else {
-            current_stopID = Main.routes.get(this.routeId).getStopIdByIndex(this.routeIndex);
-            next_stopID = Main.routes.get(this.routeId).getStopIdByIndex((this.routeIndex + 1));
+            current_stopID = GUI.routes.get(this.routeId).getStopIdByIndex(this.routeIndex);
+            next_stopID = GUI.routes.get(this.routeId).getStopIdByIndex((this.routeIndex + 1));
         }
-        current_location = Main.stops.get(current_stopID).getLocation();
-        next_location = Main.stops.get(next_stopID).getLocation();
+        current_location = GUI.stops.get(current_stopID).getLocation();
+        next_location = GUI.stops.get(next_stopID).getLocation();
         this.distanceNextStop = 70.0 * Math.sqrt((Math.pow((next_location[0] - current_location[0]),2)+
                                                   Math.pow((next_location[1] - current_location[1]),2)));
         return this.distanceNextStop;
