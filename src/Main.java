@@ -121,33 +121,32 @@ public class Main {
 
     public static void passengerExchange(Bus bus, Stop stop) {
         //TODO set new passenger capacity here
-        //TODO rename variables to match UML Class diagram
-        int num_waiting = stop.getNumPassengersWaiting();
-        System.out.println("num_waiting at station: " + num_waiting);
+        int numPassengersWaiting = stop.getNumPassengersWaiting();
+        System.out.println("numPassengersWaiting at station: " + numPassengersWaiting);
 
         // passengers arrive
-        num_waiting += stop.newPassengersArrive();
-        System.out.println("num_waiting at station after passengers arrive: " + num_waiting);
+        numPassengersWaiting += stop.newPassengersArrive();
+        System.out.println("numPassengersWaiting at station after passengers arrive: " + numPassengersWaiting);
 
-        // num_transfers passengers get off the bus
+        // numPassengersTransfers passengers get off the bus
         int bus_capacity = bus.getMaxCapacity();
-        int num_transfers = stop.unloadPassengersfromBus(); // num that should get off bus
-        System.out.println("num should get off bus: " + num_transfers);
-        int num_riders = bus.getNumPassengersRiding(); //num actually on bus
-        System.out.println("num actually on bus: " + num_riders);
-        if (num_transfers >  num_riders) { // only as many riders on the bus can get off
-            num_transfers = num_riders;
+        int numPassengersTransfers = stop.unloadPassengersfromBus(); // num that should get off bus
+        System.out.println("num should get off bus: " + numPassengersTransfers);
+        int numPassengersRiding = bus.getNumPassengersRiding(); //num actually on bus
+        System.out.println("num actually on bus: " + numPassengersRiding);
+        if (numPassengersTransfers >  numPassengersRiding) { // only as many riders on the bus can get off
+            numPassengersTransfers = numPassengersRiding;
         }
-        if (num_riders - num_transfers > bus_capacity) { // no more than bus_capacity can stay on the bus
-            num_transfers  = num_riders - bus_capacity;
+        if (numPassengersRiding - numPassengersTransfers > bus_capacity) { // no more than bus_capacity can stay on the bus
+            numPassengersTransfers  = numPassengersRiding - bus_capacity;
         }
-        System.out.println("actual num getting off bus: " + num_transfers);
-        bus.subtractRiders(num_transfers);
+        System.out.println("actual num getting off bus: " + numPassengersTransfers);
+        bus.subtractRiders(numPassengersTransfers);
 
         // passengers get on the bus
         int num_riders_on = stop.loadPassengersfromStop(); //num that should get on the bus
-        if (num_riders_on > num_waiting) { // only as many people in the waiting group can get on the bus
-            num_riders_on = num_waiting;
+        if (num_riders_on > numPassengersWaiting) { // only as many people in the waiting group can get on the bus
+            num_riders_on = numPassengersWaiting;
         }
         int num_avail_seats = bus.getNumAvailableSeats();
         System.out.println("num_avail_seats: " + num_avail_seats);
@@ -157,16 +156,16 @@ public class Main {
         System.out.println("actual num getting on bus: " + num_riders_on);
 
 
-        num_waiting -= num_riders_on; // subtract from num waiting group
-        System.out.println("num waiting at station after passengers get on bus: " + num_waiting);
+        numPassengersWaiting -= num_riders_on; // subtract from num waiting group
+        System.out.println("num waiting at station after passengers get on bus: " + numPassengersWaiting);
 
         bus.addRiders(num_riders_on); // add riders to the bus
         System.out.println("num riders on bus after people get on: " + bus.getNumPassengersRiding());
 
 
         // passengers depart station
-        int total_people_at_station = num_transfers + num_waiting;
-        System.out.println("total people at station: " + total_people_at_station + "\n");
+        int total_people_at_station = numPassengersTransfers + numPassengersWaiting;
+        System.out.println("total people at station: " + total_people_at_station);
 
         int num_passengers_depart = stop.passengersDepartStop();
         System.out.println("number of people that should depart: " + num_passengers_depart);
@@ -175,18 +174,18 @@ public class Main {
             num_passengers_depart = total_people_at_station;
         }
         System.out.println("number of people that depart: " + num_passengers_depart);
-        if (num_passengers_depart <= num_transfers) { // transfer group is absorbed by waiting group
-            num_transfers -= num_passengers_depart;
-            num_waiting += num_transfers;
+        if (num_passengers_depart <= numPassengersTransfers) { // transfer group is absorbed by waiting group
+            numPassengersTransfers -= num_passengers_depart;
+            numPassengersWaiting += numPassengersTransfers;
         } else { // some people in waiting group depart the station
-            num_waiting -= num_passengers_depart - num_transfers;
+            numPassengersWaiting -= num_passengers_depart - numPassengersTransfers;
         }
 
         // set the new number of waiters at the Stop
-        if (num_waiting < 0) {
-            throw new RuntimeException("num_waiting is negative!");
+        if (numPassengersWaiting < 0) {
+            throw new RuntimeException("numPassengersWaiting is negative!");
         }
-        System.out.println("number of people at station: " + num_waiting);
-        stop.setNumPassengersWaiting(num_waiting);
+        System.out.println("number of people at station: " + numPassengersWaiting + "\n");
+        stop.setNumPassengersWaiting(numPassengersWaiting);
     }
 }
