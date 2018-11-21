@@ -17,6 +17,7 @@ public class Bus {
     private int stopId;
     private int initalFuel;
     private int fuelCapacity;
+    private int previousRouteIndex;
 
     // Bus Constructor
     public Bus (int bus_id, int route_id, int route_index, int initial_passengers, int max_capacity,
@@ -34,6 +35,7 @@ public class Bus {
         this.fuelCapacity = fuel_capacity;
         this.avgSpeed = speed;
         this.stopId = GUI.routes.get(this.routeId).getStopIdByIndex(this.routeIndex);
+        this.previousRouteIndex = 0;
     }
     // Access methods
     public int getRouteId() {
@@ -62,6 +64,15 @@ public class Bus {
     public void setRouteIndex(int index){
         this.routeIndex = index;
         return;
+    }
+
+    public void setPrevRouteIndex(int index){
+        this.previousRouteIndex = index;
+        return;
+    }
+
+    public int getPreviousRouteIndex(){
+        return this.previousRouteIndex;
     }
 
     // Methods

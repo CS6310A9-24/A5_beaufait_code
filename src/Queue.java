@@ -49,8 +49,10 @@ public class Queue {
         int bus_id = this.listEvents.get(eventIndex).getBusId();
         int route_id = GUI.buses.get(bus_id).getRouteId();
         if((GUI.buses.get(bus_id).getRouteIndex() + 1)>= GUI.routes.get(route_id).getListStopIds().size()){
+            GUI.buses.get(bus_id).setPrevRouteIndex(GUI.buses.get(bus_id).getRouteIndex());
             GUI.buses.get(bus_id).setRouteIndex(0);
         } else {
+            GUI.buses.get(bus_id).setPrevRouteIndex(GUI.buses.get(bus_id).getRouteIndex());
             GUI.buses.get(bus_id).setRouteIndex((GUI.buses.get(bus_id).getRouteIndex() + 1));
         }
         return;

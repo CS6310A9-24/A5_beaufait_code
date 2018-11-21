@@ -189,21 +189,23 @@ public class GUI {
             // Step 5: Display the output line of text to the display
         next_passengers = buses.get(current_bus_processing).getNumPassengersRiding();
         System.out.println("b:"+current_bus_processing +"->s:"+next_stop_id+"@"+next_time+"//p:"+next_passengers+"/f:0");
+
+            //Make the GUI match
+        move_bus();
             // Step 6: Update system state and generate new events as needed.
         queue.updateEventExecutionTimes(queue.currentEventId, next_time);
-        move_bus();
     }
 
     public void move_bus(){
-        int current_stopID = routes.get(buses.get(current_bus_processing).getRouteId()).getStopIdByIndex(buses.get(current_bus_processing).getRouteIndex()-1);
-        ((JTextField)(stop_box.get(current_stopID).getComponent(2))).setText("b:"+current_bus_processing +"->s:"+next_stop_id+"@"+next_time+"//p:"+next_passengers+"/f:0");
-        //((JTextField)(stop_box.get(current_stopID).getComponent(2))).setText("");
-        stop_box.get(current_stopID).getComponent(3).setVisible(true);
-        //if(buses.get(current_bus_processing).getRouteIndex() != 0) {
-        //    stop_box.get(current_stopID).getComponent(3).setVisible(false);
-        //}else if(buses.get(current_bus_processing).getRouteIndex() == routes.get(buses.get(current_bus_processing).getRouteId()).getListStopIds().size() -1){
-        //    stop_box.get(current_stopID).getComponent(3).setVisible(false);
-        //}
+        int current_stopID = routes.get(buses.get(current_bus_processing).getRouteId()).getStopIdByIndex(buses.get(current_bus_processing).getRouteIndex());
+        int previous_stopID = routes.get(buses.get(current_bus_processing).getRouteId()).getStopIdByIndex(buses.get(current_bus_processing).getPreviousRouteIndex());;
 
+        ((JTextField)(stop_box.get(current_stopID).getComponent(2))).setText("b:"+current_bus_processing +"->s:"+next_stop_id+"@"+next_time+"//p:"+next_passengers+"/f:0");
+        stop_box.get(current_stopID).getComponent(3).setVisible(true);//show bus at the new location
+
+        if(current_stopID != previous_stopID) {
+            ((JTextField) (stop_box.get(previous_stopID).getComponent(2))).setText("");
+            stop_box.get(previous_stopID).getComponent(3).setVisible(false);
+        }
     }
 }
