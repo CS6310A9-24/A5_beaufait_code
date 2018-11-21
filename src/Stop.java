@@ -1,3 +1,5 @@
+import java.util.Random;
+
 public class Stop {
     // Declare Stop attributes
     private int id;
@@ -15,6 +17,8 @@ public class Stop {
     private int numNewPassengerArrivals;
     private int numPassengerDepartures;
     private Location location;
+
+    private static Random random = new Random(); //let all Stop classes share this one Random object
 
     // Stop Constructor
     public Stop (int stop_id, String stop_name, int initial_riders, double stop_latitude, double stop_longitude){
@@ -147,27 +151,27 @@ public class Stop {
         if (this.ridersArriveHigh - this.ridersArriveLow < 0) {
             System.out.println("can't have negative ridersArrive");
         }
-        return this.ridersArriveLow + Math.round( (float) (Math.random() * (this.ridersArriveHigh - this.ridersArriveLow)));
+        return random.nextInt((this.ridersArriveHigh - this.ridersArriveLow) + 1) + this.ridersArriveLow;
     }
 
     public int unloadPassengersfromBus() {
         if (this.ridersOffHigh - this.ridersOffLow < 0) {
             System.out.println("can't have negative ridersOff");
         }
-        return this.ridersOffLow + Math.round((float) (Math.random() * (this.ridersOffHigh - this.ridersOffLow)));
+        return random.nextInt((this.ridersOffHigh - this.ridersOffLow) + 1) + this.ridersOffLow;
     }
 
     public int loadPassengersfromStop() {
         if (this.ridersOnHigh - this.ridersOnLow < 0) {
             System.out.println("can't have negative ridersOn");
         }
-        return this.ridersOnLow + Math.round( (float) (Math.random() * (this.ridersOnHigh - this.ridersOnLow)));
+        return random.nextInt( (this.ridersOnHigh - this.ridersOnLow) + 1) + this.ridersOnLow;
     }
 
     public int passengersDepartStop() {
         if (this.ridersDepartHigh - this.ridersDepartLow < 0) {
             System.out.println("can't have negative ridersDepart");
         }
-        return this.ridersDepartLow + Math.round( (float) (Math.random() * (this.ridersDepartHigh - this.ridersDepartLow)));
+        return random.nextInt( (this.ridersDepartHigh - this.ridersDepartLow) + 1) + this.ridersDepartLow;
     }
 }
