@@ -63,6 +63,31 @@ public class Bus {
             return Main.routes.get(this.routeId).getStopIdByIndex((this.routeIndex + 1));
         }
     }
+
+    public void subtractRiders(int num) {
+        if (num < 0) {
+            throw new RuntimeException("must subtract a nonnegative number of riders");
+        }
+        if (num > maxCapacity) {
+            throw new RuntimeException("requesting more than maxCapacity riders get off the bus");
+        }
+        this.numPassengersRiding -= num;
+    }
+
+    public void addRiders(int num) {
+        if (num < 0) {
+            throw new RuntimeException("must add a nonnegative number of riders");
+        }
+        if (num + this.numPassengersRiding > this.maxCapacity) {
+            throw new RuntimeException("adding more riders than the bus can hold");
+        }
+        this.numPassengersRiding += num;
+    }
+
+    public int getNumAvailableSeats() {
+        return this.maxCapacity - this.numPassengersRiding;
+    }
+
     public void setRouteIndex(int index){
         this.routeIndex = index;
         return;

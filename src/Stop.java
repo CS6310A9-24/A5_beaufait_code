@@ -142,4 +142,32 @@ public class Stop {
     public void setLocation(Location location) {
         this.location = location;
     }
+
+    public int newPassengersArrive() {
+        if (this.ridersArriveHigh - this.ridersArriveLow < 0) {
+            System.out.println("can't have negative ridersArrive");
+        }
+        return this.ridersArriveLow + Math.round( (float) (Math.random() * (this.ridersArriveHigh - this.ridersArriveLow)));
+    }
+
+    public int unloadPassengersfromBus() {
+        if (this.ridersOffHigh - this.ridersOffLow < 0) {
+            System.out.println("can't have negative ridersOff");
+        }
+        return this.ridersOffLow + Math.round((float) (Math.random() * (this.ridersOffHigh - this.ridersOffLow)));
+    }
+
+    public int loadPassengersfromStop() {
+        if (this.ridersOnHigh - this.ridersOnLow < 0) {
+            System.out.println("can't have negative ridersOn");
+        }
+        return this.ridersOnLow + Math.round( (float) (Math.random() * (this.ridersOnHigh - this.ridersOnLow)));
+    }
+
+    public int passengersDepartStop() {
+        if (this.ridersDepartHigh - this.ridersDepartLow < 0) {
+            System.out.println("can't have negative ridersDepart");
+        }
+        return this.ridersDepartLow + Math.round( (float) (Math.random() * (this.ridersDepartHigh - this.ridersDepartLow)));
+    }
 }
