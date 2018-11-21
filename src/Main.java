@@ -121,7 +121,7 @@ public class Main {
 
     public static void passengerExchange(Bus bus, Stop stop) {
         //TODO set new passenger capacity here
-
+        //TODO rename variables to match UML Class diagram
         int num_waiting = stop.getNumPassengersWaiting();
         System.out.println("num_waiting at station: " + num_waiting);
 
@@ -184,7 +184,7 @@ public class Main {
 
         // set the new number of waiters at the Stop
         if (num_waiting < 0) {
-            System.out.println("num_waiting is negative!");
+            throw new RuntimeException("num_waiting is negative!");
         }
         System.out.println("number of people at station: " + num_waiting);
         stop.setNumPassengersWaiting(num_waiting);
