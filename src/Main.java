@@ -7,6 +7,7 @@ public class Main {
     public static Map<Integer, Bus> buses = new HashMap();
     public static Map<Integer,Stop> stops = new HashMap();
     public static Map<Integer,Route> routes = new HashMap();
+    public static List<BusChange> bus_changes = new ArrayList<>();
     public static void main(String[] args) {
         // Initialize variables
         int event_index = -1;
@@ -101,6 +102,14 @@ public class Main {
             // Step 3: Determine which bus should be selected for processing(based on lowest arrival time)
             queue.chooseNextEvent();
             current_bus_processing = queue.listEvents.get(queue.currentEventId).getBusId();
+            Bus bus = buses.get(current_bus_processing);
+
+            // Step 4: update bus changes (if any)
+            evaluateChanges(bus);
+
+            // Step 5: Do passenger exchange at this stop
+            passengerExchange(bus, bus.getCurrentStop());
+
             // Step 3: Determine which stop the bus will travel to next (based on the current location and route)
             next_stop_id = buses.get(current_bus_processing).getNextStop();
             // Step 4: Calculate the distance and travel time between the current and next stops
@@ -113,14 +122,30 @@ public class Main {
             // Step 6: Update system state (increment bus route index [stop]) and generate new events as needed.
             queue.updateEventExecutionTimes(queue.currentEventId, next_time);
 
-            // Step 4: Do passenger exchange at this stop
-            Bus bus = buses.get(current_bus_processing);
-            passengerExchange(bus, bus.getCurrentStop());
+        }
+    }
+
+    public static void evaluateChanges(Bus bus) {
+        for (BusChange change : bus_changes) {
+            BusChange.ChangeType type = change.getChangeType();
+            switch (type) {
+                case SPEED:
+                    BusSpeedChange speedChange = (BusSpeedChange) change;
+                    bus.setSpeed(speedChange.getNewSpeed());
+                    break;
+                case CAPACITY:
+                    BusCapacityChange capacityChange = (BusCapacityChange) change;
+                    bus.setCapacity(capacityChange.getNewCapacity());
+                    break;
+                case ROUTE:
+                    BusRouteChange routeChange = (BusRouteChange) change;
+                    bus.changeRoute(routeChange.getNewRouteId(), routeChange.getNewRouteIndex());
+                    break;
+            }
         }
     }
 
     public static void passengerExchange(Bus bus, Stop stop) {
-        //TODO set new passenger capacity here
         int numPassengersWaiting = stop.getNumPassengersWaiting();
         System.out.println("numPassengersWaiting at station: " + numPassengersWaiting);
 
