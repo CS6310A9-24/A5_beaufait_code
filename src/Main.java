@@ -1,13 +1,12 @@
-import java.util.Scanner;
+import java.util.*;
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 import java.lang.*;
 
 public class Main {
     public static Map<Integer, Bus> buses = new HashMap();
     public static Map<Integer,Stop> stops = new HashMap();
     public static Map<Integer,Route> routes = new HashMap();
+    public static List<BusChange> bus_changes = new ArrayList<>();
     public static void main(String[] args) {
         // Initialize variables
         int event_index = -1;
@@ -69,6 +68,11 @@ public class Main {
             // Step 2: Determine which bus should be selected for processing(based on lowest arrival time)
             queue.chooseNextEvent();
             current_bus_processing = queue.listEvents.get(queue.currentEventId).getBusId();
+            Bus bus = buses.get(current_bus_processing);
+
+            // Step 4: update bus changes (if any)
+            evaluateChanges(bus);
+
             // Step 3: Determine which stop the bus will travel to next (based on the current location and route)
             next_stop_id = buses.get(current_bus_processing).getNextStop();
             // Step 4: Calculate the distance and travel time between the current and next stops
@@ -80,6 +84,27 @@ public class Main {
             System.out.println("b:"+current_bus_processing +"->s:"+next_stop_id+"@"+next_time+"//p:"+next_passengers+"/f:0");
             // Step 6: Update system state and generate new events as needed.
             queue.updateEventExecutionTimes(queue.currentEventId, next_time);
+
+        }
+    }
+
+    public static void evaluateChanges(Bus bus) {
+        for (BusChange change : bus_changes) {
+            BusChange.ChangeType type = change.getChangeType();
+            switch (type) {
+                case SPEED:
+                    BusSpeedChange speedChange = (BusSpeedChange) change;
+                    bus.setSpeed(speedChange.getNewSpeed());
+                    break;
+                case CAPACITY:
+                    BusCapacityChange capacityChange = (BusCapacityChange) change;
+                    bus.setCapacity(capacityChange.getNewCapacity());
+                    break;
+                case ROUTE:
+                    BusRouteChange routeChange = (BusRouteChange) change;
+                    bus.changeRoute(routeChange.getNewRouteId(), routeChange.getNewRouteIndex());
+                    break;
+            }
         }
     }
 }

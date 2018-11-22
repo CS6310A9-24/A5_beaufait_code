@@ -44,14 +44,27 @@ public class Queue {
         this.currentEventId = lowestEventId;
         return;
     }
+    // final step: make routeId and routeIndex the same as newRouteId and newRouteIndex so that Main can tell if client has changed bus route in future steps
+    // pre-condition: routeId and routeIndex may be same or different than newRouteId and newRouteIndex (latter is true if client requested bus route change)
+    // post-condition: bus routeId and routeIndex will be equal to newRouteId and newRouteIndex, respectively
     public void updateEventExecutionTimes(int eventIndex, int eventRank){
         this.listEvents.get(eventIndex).setRank(eventRank);
         int bus_id = this.listEvents.get(eventIndex).getBusId();
-        int route_id = Main.buses.get(bus_id).getRouteId();
-        if((Main.buses.get(bus_id).getRouteIndex() + 1)>= Main.routes.get(route_id).getListStopIds().size()){
-            Main.buses.get(bus_id).setRouteIndex(0);
-        } else {
-            Main.buses.get(bus_id).setRouteIndex((Main.buses.get(bus_id).getRouteIndex() + 1));
+        Bus bus = Main.buses.get(bus_id);
+        if (bus.getRouteId() == bus.getNewRouteId()) { //client has not changed route since last move_bus event was processed
+            // make routeIndex and newRouteIndex equal to the index of the next stop on the current route
+            int route_id = bus.getRouteId();
+            if((bus.getRouteIndex() + 1)>= Main.routes.get(route_id).getListStopIds().size()){
+                bus.setRouteIndex(0);
+                bus.setNewRouteIndex(0);
+            } else {
+                bus.setRouteIndex((bus.getRouteIndex() + 1));
+                bus.setNewRouteIndex((bus.getRouteIndex() + 1));
+            }
+        } else { //client has changed route since last move_bus event was processed
+            // set the bus route and stop index to be newRouteId and newRouteIndex, respectively
+            bus.setRouteId(bus.getNewRouteId());
+            bus.setRouteIndex(bus.getNewRouteIndex());
         }
         return;
     }
