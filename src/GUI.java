@@ -23,7 +23,7 @@ public class GUI {
     //public JTextArea sim_status = new JTextArea("Status window");
     public static JPanel world_layout = new JPanel();
     public JPanel button_layout = new JPanel();
-    public static Map<Integer, JPanel> stop_box = new HashMap();
+    public static Map<Integer, StopBox> stopBoxes = new HashMap();
 
     public static ImageIcon stop_icon = new ImageIcon("bus_stop_img.png");
     public static ImageIcon bus_icon = new ImageIcon("bus_img.png");
@@ -127,7 +127,7 @@ public class GUI {
     public void add_bus_GUI(int bus_index){
         int current_stopID = routes.get(buses.get(bus_index).getRouteId()).getStopIdByIndex(buses.get(bus_index).getRouteIndex());
 
-        stop_box.get(current_stopID).getComponent(3).setVisible(true);
+        stopBoxes.get(current_stopID).init_bus();
 
     }
 
@@ -139,40 +139,20 @@ public class GUI {
         int pos_x = (int)(loc[1]*2400);
         int pos_y = (int)(loc[0]*1200);
 
-        JLabel bus_stop_img = new JLabel(stop_icon);
-        bus_stop_img.setName("bus_stop_img");
-        //bus_stop_img.setBounds(pos_x, pos_y, 25, 20);
-        JTextField bus_stop_info = new JTextField("Stop#" + stops.get(stop_index).getId() + " " + stops.get(stop_index).getName());
-        bus_stop_info.setFont(new Font("Courier", Font.BOLD,8));
-        bus_stop_info.setEditable(false);
-        bus_stop_info.setName("bus_stop_info");
+        String name = ("Stop#" + stops.get(stop_index).getId() + " " + stops.get(stop_index).getName());
+        int stop_id = stops.get(stop_index).getId();
 
-        JTextField bus_info = new JTextField("");
-        bus_info.setFont(new Font("Courier", Font.BOLD,8));
-        bus_info.setEditable(false);
-        bus_info.setName("bus_info");
+        StopBox sb = new StopBox(stop_id, name);
 
-        JLabel bus_img = new JLabel(bus_icon);
-        bus_img.setName("bus_img");
-        bus_img.setVisible(false);
+        sb.validate();
+        sb.setBounds(pos_x, pos_y, sb.getPreferredSize().width, sb.getPreferredSize().height);
+        sb.setName("" + stops.get(stop_index).getId());
 
-        JPanel sp = new JPanel();
-        sp.setLayout(new BorderLayout());
-        sp.add(bus_stop_info, "North");
-        sp.add(bus_stop_img, "West");
-        sp.add(bus_info, "South");
-        sp.add(bus_img, "East");
-        sp.setName("stop_panel");
-
-        sp.validate();
-        sp.setBounds(pos_x, pos_y, sp.getPreferredSize().width, sp.getPreferredSize().height);
-        sp.setName("" + stops.get(stop_index).getId());
-
-        stop_box.put(stop_index, sp);
+        stopBoxes.put(stop_id, sb);
         //new_stop.set_stop_box_id(stop_box.size()-1);
         //stops.add(new_stop);
 
-        world_layout.add(stop_box.get(stop_index));
+        world_layout.add(stopBoxes.get(stop_index));
         world_layout.validate();
     }
 
@@ -199,13 +179,15 @@ public class GUI {
     public void move_bus(){
         int current_stopID = routes.get(buses.get(current_bus_processing).getRouteId()).getStopIdByIndex(buses.get(current_bus_processing).getRouteIndex());
         int previous_stopID = routes.get(buses.get(current_bus_processing).getRouteId()).getStopIdByIndex(buses.get(current_bus_processing).getPreviousRouteIndex());;
+        String s ="b:"+current_bus_processing +"->s:"+next_stop_id+"@"+next_time+"//p:"+next_passengers+"/f:0";
 
-        ((JTextField)(stop_box.get(current_stopID).getComponent(2))).setText("b:"+current_bus_processing +"->s:"+next_stop_id+"@"+next_time+"//p:"+next_passengers+"/f:0");
-        stop_box.get(current_stopID).getComponent(3).setVisible(true);//show bus at the new location
+        //((JTextField)(stop_box.get(current_stopID).getComponent(2))).setText("b:"+current_bus_processing +"->s:"+next_stop_id+"@"+next_time+"//p:"+next_passengers+"/f:0");
+        stopBoxes.get(current_stopID).add_busTextField(current_bus_processing, s);
+        //stop_box.get(current_stopID).getComponent(3).setVisible(true);//show bus at the new location
 
-        if(current_stopID != previous_stopID) {
-            ((JTextField) (stop_box.get(previous_stopID).getComponent(2))).setText("");
-            stop_box.get(previous_stopID).getComponent(3).setVisible(false);
-        }
+        //if(current_stopID != previous_stopID) {
+        //    ((JTextField) (stop_box.get(previous_stopID).getComponent(2))).setText("");
+        //    stop_box.get(previous_stopID).getComponent(3).setVisible(false);
+        //}
     }
 }

@@ -3,7 +3,7 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class StopBox {
+public class StopBox extends JPanel{
 
     public static ImageIcon stop_icon = new ImageIcon("bus_stop_img.png");
     public static ImageIcon bus_icon = new ImageIcon("bus_img.png");
@@ -21,7 +21,7 @@ public class StopBox {
     private String name;
 
 
-    public StopBox(String name){
+    public StopBox(int stopID, String name){
         panel.setLayout(new GridBagLayout());
         this.name = name;
 
@@ -56,6 +56,8 @@ public class StopBox {
         bus_img.setVisible(false);
         panel.add(bus_img, c);
 
+        panel.validate();
+
     }
 
     public void add_busTextField(int bus_id, String s){
@@ -85,5 +87,9 @@ public class StopBox {
 
     public void setPaxInfo(String s){
         this.pax_info.setText(s);
+    }
+
+    public void init_bus(){
+        this.bus_stop_img.setVisible(true);
     }
 }
