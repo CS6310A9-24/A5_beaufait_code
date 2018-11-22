@@ -143,15 +143,12 @@ public class GUI {
         int stop_id = stops.get(stop_index).getId();
 
         StopBox sb = new StopBox(stop_id, name);
+        //sb.setName("" + stops.get(stop_index).getId());
 
-        sb.validate();
-        sb.setBounds(pos_x, pos_y, sb.getPreferredSize().width, sb.getPreferredSize().height);
-        sb.setName("" + stops.get(stop_index).getId());
+        //sb.setBounds(pos_x, pos_y, sb.getPreferredSize().width, sb.getPreferredSize().height);
 
         stopBoxes.put(stop_id, sb);
-        //new_stop.set_stop_box_id(stop_box.size()-1);
-        //stops.add(new_stop);
-
+        stopBoxes.get(stop_id).validate();
         world_layout.add(stopBoxes.get(stop_index));
         world_layout.validate();
     }

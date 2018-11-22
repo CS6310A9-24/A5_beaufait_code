@@ -23,6 +23,7 @@ public class StopBox extends JPanel{
 
     public StopBox(int stopID, String name){
         panel.setLayout(new GridBagLayout());
+        c.fill = GridBagConstraints.HORIZONTAL;
         this.name = name;
 
         //add name to stop
@@ -56,6 +57,7 @@ public class StopBox extends JPanel{
         bus_img.setVisible(false);
         panel.add(bus_img, c);
 
+        panel.setVisible(true);
         panel.validate();
 
     }
@@ -74,10 +76,12 @@ public class StopBox extends JPanel{
         c.gridx = 0;
 
         panel.add(busTextField.get(bus_id), c);
+        panel.validate();
     }
 
     public void remove_busTextField(int bus_id){
         panel.remove(busTextField.get(bus_id));
+        panel.validate();
     }
 
     public void show_buses(){
