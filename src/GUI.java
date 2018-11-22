@@ -128,6 +128,7 @@ public class GUI {
         int current_stopID = routes.get(buses.get(bus_index).getRouteId()).getStopIdByIndex(buses.get(bus_index).getRouteIndex());
 
         stopBoxes.get(current_stopID).init_bus();
+        //stopBoxes.get(current_stopID).add_busTextField("");
 
     }
 
@@ -140,15 +141,15 @@ public class GUI {
         int pos_y = (int)(loc[0]*1200);
 
         String name = ("Stop#" + stops.get(stop_index).getId() + " " + stops.get(stop_index).getName());
-        int stop_id = stops.get(stop_index).getId();
 
-        StopBox sb = new StopBox(stop_id, name);
+        StopBox sb = new StopBox(stop_index, name);
+        //sb.setLayout(new GridBagLayout());
         //sb.setName("" + stops.get(stop_index).getId());
 
-        //sb.setBounds(pos_x, pos_y, sb.getPreferredSize().width, sb.getPreferredSize().height);
+        sb.setBounds(pos_x, pos_y, sb.getPreferredSize().width, sb.getPreferredSize().height);
 
-        stopBoxes.put(stop_id, sb);
-        stopBoxes.get(stop_id).validate();
+        stopBoxes.put(stop_index, sb);
+        //stopBoxes.get(stop_id).validate();
         world_layout.add(stopBoxes.get(stop_index));
         world_layout.validate();
     }
