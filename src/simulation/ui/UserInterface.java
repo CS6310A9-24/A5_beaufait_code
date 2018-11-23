@@ -63,6 +63,12 @@ public class UserInterface {
         move_bus.setBounds(0, 0, move_bus.getPreferredSize().width, move_bus.getPreferredSize().height);
         button_layout.add(move_bus);
 
+        JButton replay_3_events = new JButton("Go Back 3 Events");
+        JButton replay_2_events = new JButton("Go Back 2 Events");
+        JButton replay_1_events = new JButton("Go Back 1 Event");
+        
+        JButton get_system_efficiency = new JButton("Get System Efficiency");
+
         move_bus.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

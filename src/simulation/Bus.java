@@ -24,7 +24,7 @@ public class Bus {
 
     // Bus Constructor
     public Bus(int bus_id, int route_id, int route_index, int initial_passengers, int max_capacity,
-               int intial_fuel, int fuel_capacity, double speed) {
+               int initial_fuel, int fuel_capacity, double speed) {
         this.id = bus_id;
         this.routeId = route_id;
         this.routeIndex = route_index;
@@ -34,7 +34,7 @@ public class Bus {
         this.isMoving = false;
         this.isLoading = false;
         this.maxCapacity = max_capacity;
-        this.initalFuel = intial_fuel;
+        this.initalFuel = initial_fuel;
         this.fuelCapacity = fuel_capacity;
         this.avgSpeed = speed;
         this.stopId = ui.routes.get(this.routeId).getStopIdByIndex(this.routeIndex);
