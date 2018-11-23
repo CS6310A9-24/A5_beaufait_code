@@ -8,27 +8,39 @@ public class StopBox extends JPanel{
     public static ImageIcon stop_icon = new ImageIcon("bus_stop_img.png");
     public static ImageIcon bus_icon = new ImageIcon("bus_img.png");
 
-    //public JPanel panel = new JPanel();
-    //private JTextField busTextField = new JTextField();
     private GridBagConstraints c = new GridBagConstraints();
     private JTextField bus_stop_info = new JTextField();
     private JLabel bus_stop_img = new JLabel(stop_icon);
     private JLabel bus_img = new JLabel(bus_icon);
     private JTextField pax_info = new JTextField();
 
-    private static Map<Integer, JTextField> busTextField = new HashMap();//integer is the bus_id
+    private static Map<Integer, JTextField> busTextFields = new HashMap();//integer is the bus_id
 
     private String name;
+    private int stopID;
 
 
     public StopBox(int stopID, String name){
+        this.stopID = stopID;
         setLayout(new GridBagLayout());
         c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx = 1;
+        c.weighty = 1;
         this.name = name;
+
+        //add bus_icon - must be done first since it is the second column
+        c.gridx = 1;
+        c.gridy = 2;
+        c.anchor = GridBagConstraints.WEST;
+        bus_img.setName("bus_img");
+        bus_img.setVisible(false);
+        add(bus_img, c);
 
         //add name to stop
         c.gridx = 0;
         c.gridy = 0;
+        c.anchor = GridBagConstraints.CENTER;
+        c.gridwidth = 2;
         bus_stop_info.setFont(new Font("Courier", Font.BOLD,8));
         bus_stop_info.setEditable(false);
         bus_stop_info.setName("bus_stop_info");
@@ -38,6 +50,7 @@ public class StopBox extends JPanel{
         //add pax text field
         c.gridx = 0;
         c.gridy = 1;
+        c.anchor = GridBagConstraints.CENTER;
         c.gridwidth = 2;
         pax_info.setName("pax_info");
         pax_info.setVisible(true);
@@ -47,16 +60,11 @@ public class StopBox extends JPanel{
         //add bus stop image
         c.gridx = 0;
         c.gridy = 2;
+        c.anchor = GridBagConstraints.WEST;
+        c.gridwidth = 1;
         bus_stop_img.setName("bus_stop_img");
         bus_stop_img.setVisible(true);
         add(bus_stop_img, c);
-
-        //add bus_icon
-        c.gridx = 1;
-        c.gridy = 2;
-        bus_img.setName("bus_img");
-        bus_img.setVisible(false);
-        add(bus_img, c);
 
         setVisible(true);
         validate();
@@ -69,37 +77,55 @@ public class StopBox extends JPanel{
         bus_info.setEditable(false);
         bus_info.setName("" + bus_id);
 
-        busTextField.put(bus_id, bus_info);
-
+        busTextFields.put(bus_id, bus_info);
 
         //set where it should be, should always at least start at gridy = 3
-        c.gridy = 3 + busTextField.size();
+        c.gridy = 3 + busTextFields.size();
         c.gridx = 0;
         c.gridwidth = 2;
-
-        add(busTextField.get(bus_id), c);
-        revalidate();
+        System.out.println("Add " + bus_id + " to stop " + this.stopID);
+        add(busTextFields.get(bus_id), c);
+        resize();
     }
 
-    public void remove_busTextField(int bus_id){
-        remove(busTextField.get(bus_id));
-        revalidate();
+    public void updateBusInfo(int bus_id){
+
+        int compID = 1000;
+        for(int i = 0; i < getComponentCount(); i++){
+            if(getComponent(i).getName().equals(Integer.toString(bus_id))){
+                compID = i;
+            }
+        }
+        remove(compID);
+        System.out.println("Rem " + bus_id + " from stop " + this.stopID);
+        busTextFields.remove(bus_id);
+
+        resize();
     }
 
     public void show_buses(){
-        if(busTextField.size() > 0)
-            this.bus_stop_img.setVisible(true);
+        if(busTextFields.size() != 0) {
+            this.bus_img.setVisible(true);
+        }else{
+            this.bus_img.setVisible(false);
+        }
 
-        revalidate();
+        resize();
     }
 
     public void setPaxInfo(String s){
         this.pax_info.setText(s);
-        revalidate();
+        resize();
     }
 
     public void init_bus(){
-        this.bus_stop_img.setVisible(true);
+        this.bus_img.setVisible(true);
+        resize();
+    }
+
+    public void resize(){
+        setPreferredSize(getPreferredSize());
         revalidate();
+        repaint();
     }
 }

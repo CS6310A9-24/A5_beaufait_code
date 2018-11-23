@@ -143,13 +143,10 @@ public class GUI {
         String name = ("Stop#" + stops.get(stop_index).getId() + " " + stops.get(stop_index).getName());
 
         StopBox sb = new StopBox(stop_index, name);
-        //sb.setLayout(new GridBagLayout());
-        //sb.setName("" + stops.get(stop_index).getId());
 
         sb.setBounds(pos_x, pos_y, sb.getPreferredSize().width, sb.getPreferredSize().height);
 
         stopBoxes.put(stop_index, sb);
-        //stopBoxes.get(stop_id).validate();
         world_layout.add(stopBoxes.get(stop_index));
         world_layout.validate();
     }
@@ -167,11 +164,10 @@ public class GUI {
             // Step 5: Display the output line of text to the display
         next_passengers = buses.get(current_bus_processing).getNumPassengersRiding();
         System.out.println("b:"+current_bus_processing +"->s:"+next_stop_id+"@"+next_time+"//p:"+next_passengers+"/f:0");
-
-            //Make the GUI match
-        move_bus();
             // Step 6: Update system state and generate new events as needed.
+        move_bus();
         queue.updateEventExecutionTimes(queue.currentEventId, next_time);
+
     }
 
     public void move_bus(){
@@ -179,13 +175,13 @@ public class GUI {
         int previous_stopID = routes.get(buses.get(current_bus_processing).getRouteId()).getStopIdByIndex(buses.get(current_bus_processing).getPreviousRouteIndex());;
         String s ="b:"+current_bus_processing +"->s:"+next_stop_id+"@"+next_time+"//p:"+next_passengers+"/f:0";
 
-        //((JTextField)(stop_box.get(current_stopID).getComponent(2))).setText("b:"+current_bus_processing +"->s:"+next_stop_id+"@"+next_time+"//p:"+next_passengers+"/f:0");
         stopBoxes.get(current_stopID).add_busTextField(current_bus_processing, s);
-        //stop_box.get(current_stopID).getComponent(3).setVisible(true);//show bus at the new location
+        stopBoxes.get(current_stopID).show_buses();
 
-        //if(current_stopID != previous_stopID) {
-        //    ((JTextField) (stop_box.get(previous_stopID).getComponent(2))).setText("");
-        //    stop_box.get(previous_stopID).getComponent(3).setVisible(false);
-        //}
+        //run logic for previous stop
+        if(current_stopID != previous_stopID)
+            stopBoxes.get(previous_stopID).updateBusInfo(current_bus_processing);
+
+        stopBoxes.get(previous_stopID).show_buses();
     }
 }
