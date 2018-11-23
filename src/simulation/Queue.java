@@ -1,6 +1,6 @@
 package simulation;
 
-import ui.UserInterface;
+import simulation.ui.UserInterface;
 
 import java.util.ArrayList;
 

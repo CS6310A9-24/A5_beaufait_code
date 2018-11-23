@@ -1,6 +1,6 @@
 package simulation;
 
-import ui.UserInterface;
+import simulation.ui.UserInterface;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,13 +11,16 @@ public class Simulation {
     public static Map<Integer, Stop> stops = new HashMap();
     public static Map<Integer, Route> routes = new HashMap();
 
-    public Simulation(String[] args) {
 
-        UserInterface g = new UserInterface();
-        g.build_environment(args);
+    private UserInterface ui;
+
+    public Simulation() {
+
+        ui = new UserInterface();
     }
 
-    public void setup() {
+    public void setup(String[] args) {
+        ui.build_environment(args);
 
     }
 }

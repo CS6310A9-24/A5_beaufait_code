@@ -1,6 +1,6 @@
 package simulation;
 
-import ui.UserInterface;
+import simulation.ui.UserInterface;
 
 public class Bus {
     // Declare Bus attributes
@@ -21,8 +21,6 @@ public class Bus {
     private int fuelCapacity;
     private int previousRouteIndex;
     private UserInterface ui;
-
-    public Bus (){ }
 
     // Bus Constructor
     public Bus(int bus_id, int route_id, int route_index, int initial_passengers, int max_capacity,

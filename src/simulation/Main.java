@@ -3,8 +3,8 @@ package simulation;
 public class Main {
 
     public static void main(String[] args) {
-        Simulation simulation = new Simulation(args);
-        simulation.setup();
+        Simulation simulation = new Simulation();
+        simulation.setup(args);
         }
     }
 
