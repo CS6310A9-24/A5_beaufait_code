@@ -1,3 +1,5 @@
+package simulation;
+
 public class Evnt {
     // Declare Evnt attributes
     private int id;

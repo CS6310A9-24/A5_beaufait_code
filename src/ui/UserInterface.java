@@ -1,3 +1,5 @@
+package ui;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -6,17 +8,21 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import simulation.Bus;
+import simulation.Route;
+import simulation.Stop;
+import simulation.Queue;
 
-public class GUI {
+public class UserInterface {
 
-    public static Map<Integer, Bus> buses = new HashMap();
-    public static Map<Integer,Stop> stops = new HashMap();
-    public static Map<Integer,Route> routes = new HashMap();
+    public  Map<Integer, Bus> buses = new HashMap<>();
+    public  Map<Integer, Stop> stops = new HashMap<>();
+    public  Map<Integer, Route> routes = new HashMap<>();
 
     public int event_index = -1;
     public int current_bus_processing, next_stop_id, next_time, next_passengers;
     public double next_distance;
-    public Queue queue = new Queue();
+    public Queue queue = new Queue(this);
 
     public JFrame simulation_frame = new JFrame("MTS Simulation Control");
     //public JPanel sim_layout = new JPanel();
@@ -25,10 +31,10 @@ public class GUI {
     public JPanel button_layout = new JPanel();
     public static Map<Integer, JPanel> stop_box = new HashMap<>();
 
-    public static ImageIcon stop_icon = new ImageIcon("bus_stop_img.png");
-    public static ImageIcon bus_icon = new ImageIcon("bus_img.png");
+    public static ImageIcon stop_icon = new ImageIcon("simulation/bus_stop_img.png");
+    public static ImageIcon bus_icon = new ImageIcon("simulation/bus_img.png");
 
-    public GUI(){
+    public UserInterface(){
         simulation_frame.setPreferredSize(new Dimension(1200, 850));
         //sim_layout.setLayout(null);
         //sim_layout.setBounds(1000, 0, 200, 800);
@@ -193,7 +199,7 @@ public class GUI {
         next_passengers = buses.get(current_bus_processing).getNumPassengersRiding();
         System.out.println("b:"+current_bus_processing +"->s:"+next_stop_id+"@"+next_time+"//p:"+next_passengers+"/simulation_frame:0");
 
-            //Make the GUI match
+            //Make the ui.UserInterface match
         move_bus();
             // Step 6: Update system state and generate new events as needed.
         queue.updateEventExecutionTimes(queue.currentEventId, next_time);
@@ -201,7 +207,7 @@ public class GUI {
 
     public void move_bus(){
         int current_stopID = routes.get(buses.get(current_bus_processing).getRouteId()).getStopIdByIndex(buses.get(current_bus_processing).getRouteIndex());
-        int previous_stopID = routes.get(buses.get(current_bus_processing).getRouteId()).getStopIdByIndex(buses.get(current_bus_processing).getPreviousRouteIndex());;
+        int previous_stopID = routes.get(buses.get(current_bus_processing).getRouteId()).getStopIdByIndex(buses.get(current_bus_processing).getPreviousRouteIndex());
 
         ((JTextField)(stop_box.get(current_stopID).getComponent(2))).setText("b:"+current_bus_processing +"->s:"+next_stop_id+"@"+next_time+"//p:"+next_passengers+"/simulation_frame:0");
         stop_box.get(current_stopID).getComponent(3).setVisible(true);//show bus at the new location
