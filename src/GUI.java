@@ -18,18 +18,18 @@ public class GUI {
     public double next_distance;
     public Queue queue = new Queue();
 
-    public JFrame f = new JFrame("MTS Simulation Control");
+    public JFrame simulation_frame = new JFrame("MTS Simulation Control");
     //public JPanel sim_layout = new JPanel();
     //public JTextArea sim_status = new JTextArea("Status window");
     public static JPanel world_layout = new JPanel();
     public JPanel button_layout = new JPanel();
-    public static Map<Integer, JPanel> stop_box = new HashMap();
+    public static Map<Integer, JPanel> stop_box = new HashMap<>();
 
     public static ImageIcon stop_icon = new ImageIcon("bus_stop_img.png");
     public static ImageIcon bus_icon = new ImageIcon("bus_img.png");
 
     public GUI(){
-        f.setPreferredSize(new Dimension(1200, 850));
+        simulation_frame.setPreferredSize(new Dimension(1200, 850));
         //sim_layout.setLayout(null);
         //sim_layout.setBounds(1000, 0, 200, 800);
         world_layout.setLayout(null);
@@ -38,11 +38,11 @@ public class GUI {
         button_layout.setLayout(null);
         button_layout.setBounds(0, 750, 800, 150);
 
-        f.setLayout(null);
+        simulation_frame.setLayout(null);
 
-        //f.getContentPane().add(sim_layout);
-        f.getContentPane().add(world_layout);
-        f.getContentPane().add(button_layout);
+        //simulation_frame.getContentPane().add(sim_layout);
+        simulation_frame.getContentPane().add(world_layout);
+        simulation_frame.getContentPane().add(button_layout);
 
         //JScrollPane sim_status_scroll = new JScrollPane(sim_status);
         //sim_status_scroll.setBounds(0, 0, 200, 800);
@@ -59,16 +59,16 @@ public class GUI {
             }
         });
 
-        f.validate();
-        f.pack();
-        f.setVisible(true);
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        simulation_frame.validate();
+        simulation_frame.pack();
+        simulation_frame.setVisible(true);
+        simulation_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     public void build_environment(String[] args){
         final String DELIMITER = ",";
-        String scenarioFile = args[0];
-
+        //String scenarioFile = args[0];
+        String scenarioFile = "resources/test_scenario.txt";
         // Step 1: Read the data from the provided scenario configuration file.
         try {
             Scanner takeCommand = new Scanner(new File(scenarioFile));
@@ -136,21 +136,24 @@ public class GUI {
 
         double[] loc = stops.get(stop_index).getLocation();
 
-        int pos_x = (int)(loc[1]*2400);
-        int pos_y = (int)(loc[0]*1200);
+        int pos_x = (int)(loc[0]*2400);
+        int pos_y = (int)(loc[1]*1200);
 
         JLabel bus_stop_img = new JLabel(stop_icon);
         bus_stop_img.setName("bus_stop_img");
         //bus_stop_img.setBounds(pos_x, pos_y, 25, 20);
-        JTextField bus_stop_info = new JTextField("Stop#" + stops.get(stop_index).getId() + " " + stops.get(stop_index).getName());
-        bus_stop_info.setFont(new Font("Courier", Font.BOLD,8));
-        bus_stop_info.setEditable(false);
-        bus_stop_info.setName("bus_stop_info");
+        JTextField bus_stop_label = new JTextField("Stop#" + stops.get(stop_index).getId() + " " + stops.get(stop_index).getName());
+        bus_stop_label.setFont(new Font("Courier", Font.BOLD,8));
+        bus_stop_label.setEditable(false);
+        bus_stop_label.setName("bus_stop_label");
+
+
 
         JTextField bus_info = new JTextField("");
         bus_info.setFont(new Font("Courier", Font.BOLD,8));
         bus_info.setEditable(false);
         bus_info.setName("bus_info");
+        JScrollPane scrollPane = new JScrollPane(bus_info);
 
         JLabel bus_img = new JLabel(bus_icon);
         bus_img.setName("bus_img");
@@ -158,9 +161,9 @@ public class GUI {
 
         JPanel sp = new JPanel();
         sp.setLayout(new BorderLayout());
-        sp.add(bus_stop_info, "North");
+        sp.add(bus_stop_label, "North");
         sp.add(bus_stop_img, "West");
-        sp.add(bus_info, "South");
+        sp.add(scrollPane, "South");
         sp.add(bus_img, "East");
         sp.setName("stop_panel");
 
@@ -188,7 +191,7 @@ public class GUI {
                 queue.listEvents.get(queue.currentEventId).getRank();
             // Step 5: Display the output line of text to the display
         next_passengers = buses.get(current_bus_processing).getNumPassengersRiding();
-        System.out.println("b:"+current_bus_processing +"->s:"+next_stop_id+"@"+next_time+"//p:"+next_passengers+"/f:0");
+        System.out.println("b:"+current_bus_processing +"->s:"+next_stop_id+"@"+next_time+"//p:"+next_passengers+"/simulation_frame:0");
 
             //Make the GUI match
         move_bus();
@@ -200,7 +203,7 @@ public class GUI {
         int current_stopID = routes.get(buses.get(current_bus_processing).getRouteId()).getStopIdByIndex(buses.get(current_bus_processing).getRouteIndex());
         int previous_stopID = routes.get(buses.get(current_bus_processing).getRouteId()).getStopIdByIndex(buses.get(current_bus_processing).getPreviousRouteIndex());;
 
-        ((JTextField)(stop_box.get(current_stopID).getComponent(2))).setText("b:"+current_bus_processing +"->s:"+next_stop_id+"@"+next_time+"//p:"+next_passengers+"/f:0");
+        ((JTextField)(stop_box.get(current_stopID).getComponent(2))).setText("b:"+current_bus_processing +"->s:"+next_stop_id+"@"+next_time+"//p:"+next_passengers+"/simulation_frame:0");
         stop_box.get(current_stopID).getComponent(3).setVisible(true);//show bus at the new location
 
         if(current_stopID != previous_stopID) {
