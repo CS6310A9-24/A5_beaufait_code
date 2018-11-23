@@ -49,6 +49,10 @@ public class Stop {
 
     public void setStopDistributions(int ridersArriveHigh, int ridersArriveLow, int ridersOffHigh, int ridersOffLow,
                                      int ridersOnHigh, int ridersOnLow, int ridersDepartHigh, int ridersDepartLow) {
+        if (ridersArriveLow < 0 || ridersOffLow < 0 || ridersOnLow < 0 || ridersDepartLow < 0 ||
+            ridersArriveHigh < ridersArriveLow || ridersOffHigh < ridersOffLow || ridersOnHigh < ridersOffLow || ridersDepartHigh < ridersDepartLow) {
+            throw new RuntimeException("Can't have negative passenger probability parameters or samples");
+        }
         this.ridersArriveHigh = ridersArriveHigh;
         this.ridersArriveLow = ridersArriveLow;
         this.ridersOffHigh = ridersOffHigh;
@@ -148,30 +152,18 @@ public class Stop {
     }
 
     public int newPassengersArrive() {
-        if (this.ridersArriveHigh - this.ridersArriveLow < 0) {
-            System.out.println("can't have negative ridersArrive");
-        }
         return random.nextInt((this.ridersArriveHigh - this.ridersArriveLow) + 1) + this.ridersArriveLow;
     }
 
     public int unloadPassengersfromBus() {
-        if (this.ridersOffHigh - this.ridersOffLow < 0) {
-            System.out.println("can't have negative ridersOff");
-        }
         return random.nextInt((this.ridersOffHigh - this.ridersOffLow) + 1) + this.ridersOffLow;
     }
 
     public int loadPassengersfromStop() {
-        if (this.ridersOnHigh - this.ridersOnLow < 0) {
-            System.out.println("can't have negative ridersOn");
-        }
         return random.nextInt( (this.ridersOnHigh - this.ridersOnLow) + 1) + this.ridersOnLow;
     }
 
     public int passengersDepartStop() {
-        if (this.ridersDepartHigh - this.ridersDepartLow < 0) {
-            System.out.println("can't have negative ridersDepart");
-        }
         return random.nextInt( (this.ridersDepartHigh - this.ridersDepartLow) + 1) + this.ridersDepartLow;
     }
 }
