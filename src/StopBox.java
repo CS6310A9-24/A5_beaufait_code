@@ -67,11 +67,12 @@ public class StopBox extends JPanel{
         add(bus_stop_img, c);
 
         setVisible(true);
-        validate();
+        resize_box();
 
     }
 
     public void add_busTextField(int bus_id, String s){
+        c.anchor = GridBagConstraints.CENTER;
         JTextField bus_info = new JTextField(s);
         bus_info.setFont(new Font("Courier", Font.BOLD,8));
         bus_info.setEditable(false);
@@ -85,11 +86,10 @@ public class StopBox extends JPanel{
         c.gridwidth = 2;
         System.out.println("Add " + bus_id + " to stop " + this.stopID);
         add(busTextFields.get(bus_id), c);
-        resize();
+        resize_box();
     }
 
     public void updateBusInfo(int bus_id){
-
         int compID = 1000;
         for(int i = 0; i < getComponentCount(); i++){
             if(getComponent(i).getName().equals(Integer.toString(bus_id))){
@@ -100,7 +100,7 @@ public class StopBox extends JPanel{
         System.out.println("Rem " + bus_id + " from stop " + this.stopID);
         busTextFields.remove(bus_id);
 
-        resize();
+        resize_box();
     }
 
     public void show_buses(){
@@ -110,20 +110,20 @@ public class StopBox extends JPanel{
             this.bus_img.setVisible(false);
         }
 
-        resize();
+        resize_box();
     }
 
     public void setPaxInfo(String s){
         this.pax_info.setText(s);
-        resize();
+        resize_box();
     }
 
     public void init_bus(){
         this.bus_img.setVisible(true);
-        resize();
+        resize_box();
     }
 
-    public void resize(){
+    public void resize_box(){
         setPreferredSize(getPreferredSize());
         revalidate();
         repaint();

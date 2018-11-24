@@ -183,5 +183,10 @@ public class GUI {
             stopBoxes.get(previous_stopID).updateBusInfo(current_bus_processing);
 
         stopBoxes.get(previous_stopID).show_buses();
+
+        stopBoxes.get(current_stopID).revalidate();
+        stopBoxes.get(previous_stopID).revalidate();
+        stopBoxes.get(current_stopID).repaint();
+        stopBoxes.get(previous_stopID).repaint();
     }
 }
