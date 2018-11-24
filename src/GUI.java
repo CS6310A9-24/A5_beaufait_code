@@ -167,7 +167,6 @@ public class GUI {
             // Step 6: Update system state and generate new events as needed.
         move_bus();
         queue.updateEventExecutionTimes(queue.currentEventId, next_time);
-
     }
 
     public void move_bus(){

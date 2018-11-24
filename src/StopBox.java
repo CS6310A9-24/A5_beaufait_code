@@ -14,7 +14,7 @@ public class StopBox extends JPanel{
     private JLabel bus_img = new JLabel(bus_icon);
     private JTextField pax_info = new JTextField();
 
-    private static Map<Integer, JTextField> busTextFields = new HashMap();//integer is the bus_id
+    private Map<Integer, JTextField> busTextFields = new HashMap();//integer is the bus_id
 
     private String name;
     private int stopID;
@@ -76,15 +76,15 @@ public class StopBox extends JPanel{
         JTextField bus_info = new JTextField(s);
         bus_info.setFont(new Font("Courier", Font.BOLD,8));
         bus_info.setEditable(false);
-        bus_info.setName("" + bus_id);
+        bus_info.setName(Integer.toString(bus_id));
 
+        System.out.println("Add " + bus_id + " to stop " + this.stopID + " with size " + busTextFields.size());
         busTextFields.put(bus_id, bus_info);
-
+        System.out.println("Added " + bus_id + " to stop " + this.stopID + " with size " + busTextFields.size());
         //set where it should be, should always at least start at gridy = 3
         c.gridy = 3 + busTextFields.size();
         c.gridx = 0;
         c.gridwidth = 2;
-        System.out.println("Add " + bus_id + " to stop " + this.stopID);
         add(busTextFields.get(bus_id), c);
         resize_box();
     }
@@ -96,10 +96,11 @@ public class StopBox extends JPanel{
                 compID = i;
             }
         }
-        remove(compID);
-        System.out.println("Rem " + bus_id + " from stop " + this.stopID);
-        busTextFields.remove(bus_id);
 
+        remove(compID);
+        System.out.println("Rem " + bus_id + " from stop " + this.stopID + " with size " + busTextFields.size());
+        busTextFields.remove(bus_id);
+        System.out.println("Removed " + bus_id + " from stop " + this.stopID + " with size " + busTextFields.size());
         resize_box();
     }
 
