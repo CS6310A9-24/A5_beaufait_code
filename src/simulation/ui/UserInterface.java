@@ -14,12 +14,6 @@ import java.util.Map;
 
 public class UserInterface {
 
-
-    public Map<Integer, Bus> buses = new HashMap<>();
-    public Map<Integer, Stop> stops = new HashMap<>();
-    public Map<Integer, Route> routes = new HashMap<>();
-
-
     public JFrame main_simulation_frame = new JFrame("MTS Simulation Control");
     public static JPanel world_layout = new JPanel();
     public static JPanel button_layout = new JPanel();
@@ -82,7 +76,7 @@ public class UserInterface {
 
 
     public void add_bus_GUI(int bus_index) {
-        int current_stopID = routes.get(buses.get(bus_index).getRouteId()).getStopIdByIndex(buses.get(bus_index).getRouteIndex());
+        int current_stopID = simulation.getRoutes().get(simulation.getBuses().get(bus_index).getRouteId()).getStopIdByIndex(simulation.getBuses().get(bus_index).getRouteIndex());
 
         stop_box.get(current_stopID).getComponent(3).setVisible(true);
 
@@ -91,7 +85,7 @@ public class UserInterface {
 
     public void add_stop_GUI(int stop_index) {
 
-        double[] loc = stops.get(stop_index).getLocation();
+        double[] loc = simulation.getStops().get(stop_index).getLocation();
 
         int pos_x = (int) (loc[0] * 2400);
         int pos_y = (int) (loc[1] * 1200);
@@ -99,7 +93,7 @@ public class UserInterface {
         JLabel bus_stop_img = new JLabel(stop_icon);
         bus_stop_img.setName("bus_stop_img");
         //bus_stop_img.setBounds(pos_x, pos_y, 25, 20);
-        JTextField bus_stop_label = new JTextField("Stop#" + stops.get(stop_index).getId() + " " + stops.get(stop_index).getName());
+        JTextField bus_stop_label = new JTextField("Stop#" + simulation.getStops()+simulation.getStops().get(stop_index).getId() + " " + simulation.getStops().get(stop_index).getName());
         bus_stop_label.setFont(new Font("Courier", Font.BOLD, 8));
         bus_stop_label.setEditable(false);
         bus_stop_label.setName("bus_stop_label");
@@ -125,7 +119,7 @@ public class UserInterface {
 
         sp.validate();
         sp.setBounds(pos_x, pos_y, sp.getPreferredSize().width, sp.getPreferredSize().height);
-        sp.setName("" + stops.get(stop_index).getId());
+        sp.setName("" + simulation.getStops().get(stop_index).getId());
 
         stop_box.put(stop_index, sp);
         //new_stop.set_stop_box_id(stop_box.size()-1);
@@ -142,8 +136,8 @@ public class UserInterface {
         int next_time = simulation.getNext_time();
         int next_passengers = simulation.getNext_passengers();
 
-        int current_stopID = simulation.getRoutes().get(buses.get(current_bus_processing).getRouteId()).getStopIdByIndex(buses.get(current_bus_processing).getRouteIndex());
-        int previous_stopID = simulation.getRoutes().get(buses.get(current_bus_processing).getRouteId()).getStopIdByIndex(buses.get(current_bus_processing).getPreviousRouteIndex());
+        int current_stopID = simulation.getRoutes().get(simulation.getBuses().get(current_bus_processing).getRouteId()).getStopIdByIndex(simulation.getBuses().get(current_bus_processing).getRouteIndex());
+        int previous_stopID = simulation.getRoutes().get(simulation.getBuses().get(current_bus_processing).getRouteId()).getStopIdByIndex(simulation.getBuses().get(current_bus_processing).getPreviousRouteIndex());
 
         ((JTextField) (stop_box.get(current_stopID).getComponent(2))).setText("b:" + current_bus_processing + "->s:" + next_stop_id + "@" + next_time + "//p:" + next_passengers + "/main_simulation_frame:0");
         stop_box.get(current_stopID).getComponent(3).setVisible(true);//show bus at the new location

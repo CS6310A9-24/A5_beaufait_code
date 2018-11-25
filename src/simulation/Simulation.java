@@ -25,7 +25,7 @@ public class Simulation {
     public Simulation() {
 
         ui = new UserInterface(this);
-        queue = new Queue(ui);
+        queue = new Queue(this);
     }
 
     public void setup(String[] args) {

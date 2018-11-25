@@ -20,7 +20,7 @@ public class Bus {
     private int initalFuel;
     private int fuelCapacity;
     private int previousRouteIndex;
-    private UserInterface ui;
+    private Simulation simulation;
 
     // Bus Constructor
     public Bus(int bus_id, int route_id, int route_index, int initial_passengers, int max_capacity,
@@ -37,7 +37,7 @@ public class Bus {
         this.initalFuel = initial_fuel;
         this.fuelCapacity = fuel_capacity;
         this.avgSpeed = speed;
-        this.stopId = ui.routes.get(this.routeId).getStopIdByIndex(this.routeIndex);
+        this.stopId = simulation.routes.get(this.routeId).getStopIdByIndex(this.routeIndex);
         this.previousRouteIndex = 0;
     }
 
@@ -63,11 +63,11 @@ public class Bus {
     }
 
     public int getNextStop() {
-        int route_size = ui.routes.get(this.routeId).getListStopIds().size();
+        int route_size = simulation.routes.get(this.routeId).getListStopIds().size();
         if (this.routeIndex == (route_size - 1)) {
-            return ui.routes.get(this.routeId).getStopIdByIndex((0));
+            return simulation.routes.get(this.routeId).getStopIdByIndex((0));
         } else {
-            return ui.routes.get(this.routeId).getStopIdByIndex((this.routeIndex + 1));
+            return simulation.routes.get(this.routeId).getStopIdByIndex((this.routeIndex + 1));
         }
     }
 
@@ -87,16 +87,16 @@ public class Bus {
     public double calculateDistance() {
         int current_stopID, next_stopID;
         double[] current_location, next_location;
-        int route_size = ui.routes.get(this.routeId).getListStopIds().size();
+        int route_size = simulation.routes.get(this.routeId).getListStopIds().size();
         if (this.routeIndex == route_size - 1) {
-            current_stopID = ui.routes.get(this.routeId).getStopIdByIndex(this.routeIndex);
-            next_stopID = ui.routes.get(this.routeId).getStopIdByIndex((0));
+            current_stopID = simulation.routes.get(this.routeId).getStopIdByIndex(this.routeIndex);
+            next_stopID = simulation.routes.get(this.routeId).getStopIdByIndex((0));
         } else {
-            current_stopID = ui.routes.get(this.routeId).getStopIdByIndex(this.routeIndex);
-            next_stopID = ui.routes.get(this.routeId).getStopIdByIndex((this.routeIndex + 1));
+            current_stopID = simulation.routes.get(this.routeId).getStopIdByIndex(this.routeIndex);
+            next_stopID = simulation.routes.get(this.routeId).getStopIdByIndex((this.routeIndex + 1));
         }
-        current_location = ui.stops.get(current_stopID).getLocation();
-        next_location = ui.stops.get(next_stopID).getLocation();
+        current_location = simulation.stops.get(current_stopID).getLocation();
+        next_location = simulation.stops.get(next_stopID).getLocation();
         this.distanceNextStop = 70.0 * Math.sqrt((Math.pow((next_location[0] - current_location[0]), 2) +
                 Math.pow((next_location[1] - current_location[1]), 2)));
         return this.distanceNextStop;
@@ -107,7 +107,7 @@ public class Bus {
         return this.travelTimeNextStop;
     }
 
-    public void setUi(UserInterface ui) {
-        this.ui = ui;
+    public void setUi(Simulation simulation) {
+        this.simulation = simulation;
     }
 }

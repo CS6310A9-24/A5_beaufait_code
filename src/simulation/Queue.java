@@ -8,13 +8,13 @@ public class Queue {
     // Declare Queue attributes
     public ArrayList<Evnt> listEvents;
     public int currentEventId;
-    public UserInterface ui;
+    public Simulation simulation;
 
     // Queue Constructor
-    public Queue(UserInterface ui) {
+    public Queue(Simulation simulation ) {
         this.currentEventId = -99;
         this.listEvents =  new ArrayList<>();
-        this.ui = ui;
+        this.simulation = simulation;
     }
     // Queue Methods
     public void addEventToPool(int eventIndex, int eventRank, String eventType, int objectId) {
@@ -36,11 +36,11 @@ public class Queue {
                 lowestEventId = compareEventId;
             } else if (lowestRank == compareRank){
                 lowestBusId = this.listEvents.get(lowestEventId).getBusId();
-                lowestDistance = ui.buses.get(lowestBusId).calculateDistance();
-                lowestTime = ui.buses.get(lowestBusId).calculateTravelTime(lowestDistance);
+                lowestDistance = simulation.buses.get(lowestBusId).calculateDistance();
+                lowestTime = simulation.buses.get(lowestBusId).calculateTravelTime(lowestDistance);
                 compareBusId = this.listEvents.get(compareEventId).getBusId();
-                compareDistance = ui.buses.get(compareBusId).calculateDistance();
-                compareTime = ui.buses.get(compareBusId).calculateTravelTime(compareDistance);
+                compareDistance = simulation.buses.get(compareBusId).calculateDistance();
+                compareTime = simulation.buses.get(compareBusId).calculateTravelTime(compareDistance);
                 if (lowestTime > compareTime) {
                     lowestRank = compareRank;
                     lowestEventId = compareEventId;
@@ -52,13 +52,13 @@ public class Queue {
     public void updateEventExecutionTimes(int eventIndex, int eventRank){
         this.listEvents.get(eventIndex).setRank(eventRank);
         int bus_id = this.listEvents.get(eventIndex).getBusId();
-        int route_id = ui.buses.get(bus_id).getRouteId();
-        if((ui.buses.get(bus_id).getRouteIndex() + 1)>= ui.routes.get(route_id).getListStopIds().size()){
-            ui.buses.get(bus_id).setPrevRouteIndex(ui.buses.get(bus_id).getRouteIndex());
-            ui.buses.get(bus_id).setRouteIndex(0);
+        int route_id = simulation.buses.get(bus_id).getRouteId();
+        if((simulation.buses.get(bus_id).getRouteIndex() + 1)>= simulation.routes.get(route_id).getListStopIds().size()){
+            simulation.buses.get(bus_id).setPrevRouteIndex(simulation.buses.get(bus_id).getRouteIndex());
+            simulation.buses.get(bus_id).setRouteIndex(0);
         } else {
-            ui.buses.get(bus_id).setPrevRouteIndex(ui.buses.get(bus_id).getRouteIndex());
-            ui.buses.get(bus_id).setRouteIndex((ui.buses.get(bus_id).getRouteIndex() + 1));
+            simulation.buses.get(bus_id).setPrevRouteIndex(simulation.buses.get(bus_id).getRouteIndex());
+            simulation.buses.get(bus_id).setRouteIndex((simulation.buses.get(bus_id).getRouteIndex() + 1));
         }
     }
 }
