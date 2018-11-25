@@ -94,7 +94,7 @@ public class UserInterface {
         bus_stop_img.setName("bus_stop_img");
         //bus_stop_img.setBounds(pos_x, pos_y, 25, 20);
         JTextField bus_stop_label = new JTextField("Stop#" + simulation.getStops().get(stop_index).getId() + " " + simulation.getStops().get(stop_index).getName());
-        bus_stop_label.setFont(new Font("Courier", Font.BOLD, 8));
+        bus_stop_label.setFont(new Font("Courier", Font.BOLD, 15));
         bus_stop_label.setEditable(false);
         bus_stop_label.setName("bus_stop_label");
 
