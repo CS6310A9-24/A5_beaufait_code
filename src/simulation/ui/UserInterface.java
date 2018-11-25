@@ -38,15 +38,16 @@ public class UserInterface {
 
     private int APP_WIDTH = 1200;
     private int APP_HEIGHT = 900;
+    private JTextField system_efficiency_text;
 
     public UserInterface() {
         main_simulation_frame.setPreferredSize(new Dimension(APP_WIDTH, APP_HEIGHT));
         //sim_layout.setLayout(null);
         //sim_layout.setBounds(1000, 0, 200, 800);
-        world_layout.setLayout(new GridLayout(5,5,15,20));
+        world_layout.setLayout(new GridLayout(5, 5, 15, 20));
         world_layout.setBounds(0, 0, APP_WIDTH, APP_HEIGHT - 150);
         world_layout.setBackground(Color.lightGray);
-        button_layout.setLayout(new GridLayout(1,8,0,10));
+        button_layout.setLayout(new GridLayout(1, 8, 0, 10));
         button_layout.setBounds(0, 750, APP_WIDTH, 150);
 
         main_simulation_frame.setLayout(null);
@@ -71,11 +72,11 @@ public class UserInterface {
 
 
         JButton replay_button = new JButton("Rewind");
-        replay_button.setBounds(0,0, replay_button.getPreferredSize().width, replay_button.getPreferredSize().height);
+        replay_button.setBounds(0, 0, replay_button.getPreferredSize().width, replay_button.getPreferredSize().height);
 
 
         JPanel system_efficiency = new JPanel();
-        JTextField system_efficiency_text = new JTextField("System Efficiency = 14.32");
+        system_efficiency_text = new JTextField("System Efficiency = 14.32");
         system_efficiency.add(system_efficiency_text);
 
         button_layout.add(move_bus_button);
@@ -233,6 +234,10 @@ public class UserInterface {
             ((JTextField) (stop_box.get(previous_stopID).getComponent(2))).setText("");
             stop_box.get(previous_stopID).getComponent(3).setVisible(false);
         }
+    }
+
+    public void updateSystemEfficiency(String text) {
+        system_efficiency_text.setText("System Efficiency = " + text);
     }
 
     private void setup_gui() {
