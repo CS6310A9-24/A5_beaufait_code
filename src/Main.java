@@ -81,9 +81,14 @@ public class Main {
             queue.chooseNextEvent();
             current_bus_processing = queue.listEvents.get(queue.currentEventId).getBusId();
             // Step 3: Determine which stop the bus will travel to next (based on the current location and route)
-            next_stop_id = buses.get(current_bus_processing).getNextStop();
+            if (queue.replay_flag) {
+                int current_route_id = Main.buses.get(current_bus_processing).getRouteId();
+                next_stop_id = Main.routes.get(current_route_id).getStopIdByIndex(queue.rewindList.get(0).getStopIndex());
+            } else {
+                next_stop_id = buses.get(current_bus_processing).getNextStop();
+            }
             // Step 4: Calculate the distance and travel time between the current and next stops
-            next_distance = buses.get(current_bus_processing).calculateDistance();
+            next_distance = buses.get(current_bus_processing).calculateDistance(next_stop_id);
             next_time = buses.get(current_bus_processing).calculateTravelTime(next_distance) +
                         queue.listEvents.get(queue.currentEventId).getRank();
             // Step 5: Display the output line of text to the display
