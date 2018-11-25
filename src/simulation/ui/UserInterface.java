@@ -1,18 +1,16 @@
 package simulation.ui;
 
 import simulation.Bus;
-import simulation.Queue;
 import simulation.Route;
+import simulation.Simulation;
 import simulation.Stop;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 
 public class UserInterface {
 
@@ -21,14 +19,8 @@ public class UserInterface {
     public Map<Integer, Stop> stops = new HashMap<>();
     public Map<Integer, Route> routes = new HashMap<>();
 
-    public int event_index = -1;
-    public int current_bus_processing, next_stop_id, next_time, next_passengers;
-    public double next_distance;
-    public Queue queue = new Queue(this);
 
     public JFrame main_simulation_frame = new JFrame("MTS Simulation Control");
-    //public JPanel sim_layout = new JPanel();
-    //public JTextArea sim_status = new JTextArea("Status window");
     public static JPanel world_layout = new JPanel();
     public static JPanel button_layout = new JPanel();
     public static Map<Integer, JPanel> stop_box = new HashMap<>();
@@ -39,11 +31,13 @@ public class UserInterface {
     private int APP_WIDTH = 1200;
     private int APP_HEIGHT = 900;
     private JTextField system_efficiency_text;
+    private Simulation simulation;
 
-    public UserInterface() {
+    public UserInterface(Simulation simulation) {
+        this.simulation = simulation;
+
         main_simulation_frame.setPreferredSize(new Dimension(APP_WIDTH, APP_HEIGHT));
-        //sim_layout.setLayout(null);
-        //sim_layout.setBounds(1000, 0, 200, 800);
+
         world_layout.setLayout(new GridLayout(5, 5, 15, 20));
         world_layout.setBounds(0, 0, APP_WIDTH, APP_HEIGHT - 150);
         world_layout.setBackground(Color.lightGray);
@@ -52,13 +46,9 @@ public class UserInterface {
 
         main_simulation_frame.setLayout(null);
 
-        //main_simulation_frame.getContentPane().add(sim_layout);
         main_simulation_frame.getContentPane().add(world_layout);
         main_simulation_frame.getContentPane().add(button_layout);
 
-        //JScrollPane sim_status_scroll = new JScrollPane(sim_status);
-        //sim_status_scroll.setBounds(0, 0, 200, 800);
-        //sim_layout.add(sim_status_scroll);
 
         JButton move_bus_button = new JButton("Move Next Bus");
         move_bus_button.setBounds(0, 0, move_bus_button.getPreferredSize().width,
@@ -66,7 +56,7 @@ public class UserInterface {
         move_bus_button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                execute_next();
+                move_bus();
             }
         });
 
@@ -90,64 +80,6 @@ public class UserInterface {
         main_simulation_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    public void build_environment(String[] args) {
-        final String DELIMITER = ",";
-        //String scenarioFile = args[0];
-        String scenarioFile = "resources/test_scenario.txt";
-        // Step 1: Read the data from the provided scenario configuration file.
-        try {
-            Scanner takeCommand = new Scanner(new File(scenarioFile));
-            String[] tokens;
-            do {
-                String userCommandLine = takeCommand.nextLine();
-                tokens = userCommandLine.split(DELIMITER);
-                // Set up scenario.
-                switch (tokens[0]) {
-                    case "add_depot":
-                        int stop_index = Integer.parseInt(tokens[1]);
-                        stops.put(stop_index, new Stop(Integer.parseInt(tokens[1]), tokens[2],
-                                Double.parseDouble(tokens[3]), Double.parseDouble(tokens[4])));
-                        break;
-                    case "add_stop":
-                        stop_index = Integer.parseInt((tokens[1]));
-                        stops.put(stop_index, new Stop(Integer.parseInt(tokens[1]), tokens[2],
-                                Integer.parseInt(tokens[3]), Double.parseDouble(tokens[4]),
-                                Double.parseDouble(tokens[5])));
-                        add_stop_GUI(stop_index);
-                        break;
-                    case "add_route":
-                        int route_index = Integer.parseInt(tokens[1]);
-                        routes.put(route_index, new Route(Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]),
-                                tokens[3]));
-                        break;
-                    case "extend_route":
-                        route_index = Integer.parseInt(tokens[1]);
-                        routes.get(route_index).addStopIdtoRoute(Integer.parseInt(tokens[2]));
-                        break;
-                    case "add_bus":
-                        int bus_index = Integer.parseInt(tokens[1]);
-                        buses.put(bus_index, new Bus(Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]),
-                                Integer.parseInt(tokens[3]), Integer.parseInt(tokens[4]),
-                                Integer.parseInt(tokens[5]), Integer.parseInt(tokens[6]),
-                                Integer.parseInt(tokens[7]), Double.parseDouble(tokens[8])));
-                        add_bus_GUI(bus_index);
-                        break;
-                    case "add_event":
-                        ++event_index;
-                        queue.addEventToPool(event_index, Integer.parseInt(tokens[1]), tokens[2],
-                                Integer.parseInt(tokens[3]));
-                        break;
-                    default:
-                        System.out.println(" command not recognized");
-                        break;
-                }
-            } while (takeCommand.hasNextLine());
-            takeCommand.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println();
-        }
-    }
 
     public void add_bus_GUI(int bus_index) {
         int current_stopID = routes.get(buses.get(bus_index).getRouteId()).getStopIdByIndex(buses.get(bus_index).getRouteIndex());
@@ -203,29 +135,15 @@ public class UserInterface {
         world_layout.validate();
     }
 
-    public void execute_next() {
-        // Step 2: Determine which bus should be selected for processing(based on lowest arrival time)
-        queue.chooseNextEvent();
-        current_bus_processing = queue.listEvents.get(queue.currentEventId).getBusId();
-        // Step 3: Determine which stop the bus will travel to next (based on the current location and route)
-        next_stop_id = buses.get(current_bus_processing).getNextStop();
-        // Step 4: Calculate the distance and travel time between the current and next stops
-        next_distance = buses.get(current_bus_processing).calculateDistance();
-        next_time = buses.get(current_bus_processing).calculateTravelTime(next_distance) +
-                queue.listEvents.get(queue.currentEventId).getRank();
-        // Step 5: Display the output line of text to the display
-        next_passengers = buses.get(current_bus_processing).getNumPassengersRiding();
-        System.out.println("b:" + current_bus_processing + "->s:" + next_stop_id + "@" + next_time + "//p:" + next_passengers + "/main_simulation_frame:0");
-
-        //Make the simulation.ui.UserInterface match
-        move_bus();
-        // Step 6: Update system state and generate new events as needed.
-        queue.updateEventExecutionTimes(queue.currentEventId, next_time);
-    }
 
     public void move_bus() {
-        int current_stopID = routes.get(buses.get(current_bus_processing).getRouteId()).getStopIdByIndex(buses.get(current_bus_processing).getRouteIndex());
-        int previous_stopID = routes.get(buses.get(current_bus_processing).getRouteId()).getStopIdByIndex(buses.get(current_bus_processing).getPreviousRouteIndex());
+        int current_bus_processing = simulation.getCurrent_bus_processing();
+        int next_stop_id = simulation.getNext_stop_id();
+        int next_time = simulation.getNext_time();
+        int next_passengers = simulation.getNext_passengers();
+
+        int current_stopID = simulation.getRoutes().get(buses.get(current_bus_processing).getRouteId()).getStopIdByIndex(buses.get(current_bus_processing).getRouteIndex());
+        int previous_stopID = simulation.getRoutes().get(buses.get(current_bus_processing).getRouteId()).getStopIdByIndex(buses.get(current_bus_processing).getPreviousRouteIndex());
 
         ((JTextField) (stop_box.get(current_stopID).getComponent(2))).setText("b:" + current_bus_processing + "->s:" + next_stop_id + "@" + next_time + "//p:" + next_passengers + "/main_simulation_frame:0");
         stop_box.get(current_stopID).getComponent(3).setVisible(true);//show bus at the new location
@@ -234,13 +152,13 @@ public class UserInterface {
             ((JTextField) (stop_box.get(previous_stopID).getComponent(2))).setText("");
             stop_box.get(previous_stopID).getComponent(3).setVisible(false);
         }
+
+        simulation.updateEventExecutionTimes();
     }
 
     public void updateSystemEfficiency(String text) {
         system_efficiency_text.setText("System Efficiency = " + text);
     }
 
-    private void setup_gui() {
 
-    }
 }
