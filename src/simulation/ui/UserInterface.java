@@ -103,7 +103,6 @@ public class UserInterface {
         bus_info.setFont(new Font("Courier", Font.BOLD, 8));
         bus_info.setEditable(false);
         bus_info.setName("bus_info");
-        JScrollPane scrollPane = new JScrollPane(bus_info);
 
         JLabel bus_img = new JLabel(bus_icon);
         bus_img.setName("bus_img");
@@ -113,7 +112,7 @@ public class UserInterface {
         sp.setLayout(new BorderLayout());
         sp.add(bus_stop_label, "North");
         sp.add(bus_stop_img, "West");
-        sp.add(scrollPane, "South");
+        sp.add(bus_info, "South");
         sp.add(bus_img, "East");
         sp.setName("stop_panel");
 
