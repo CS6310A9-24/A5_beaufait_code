@@ -30,24 +30,24 @@ public class UserInterface {
     //public JPanel sim_layout = new JPanel();
     //public JTextArea sim_status = new JTextArea("Status window");
     public static JPanel world_layout = new JPanel();
-    public JPanel button_layout = new JPanel();
+    public static JPanel button_layout = new JPanel();
     public static Map<Integer, JPanel> stop_box = new HashMap<>();
 
     public static ImageIcon stop_icon = new ImageIcon("simulation/bus_stop_img.png");
     public static ImageIcon bus_icon = new ImageIcon("simulation/bus_img.png");
 
     private int APP_WIDTH = 1200;
-    private int APP_HEIGHT = 850;
+    private int APP_HEIGHT = 900;
 
     public UserInterface() {
         main_simulation_frame.setPreferredSize(new Dimension(APP_WIDTH, APP_HEIGHT));
         //sim_layout.setLayout(null);
         //sim_layout.setBounds(1000, 0, 200, 800);
-        world_layout.setLayout(null);
-        world_layout.setBounds(0, 0, APP_WIDTH, APP_HEIGHT - 100);
+        world_layout.setLayout(new GridLayout(5,5,15,20));
+        world_layout.setBounds(0, 0, APP_WIDTH, APP_HEIGHT - 150);
         world_layout.setBackground(Color.lightGray);
-        button_layout.setLayout(null);
-        button_layout.setBounds(0, 750, 800, 150);
+        button_layout.setLayout(new GridLayout(1,8,0,10));
+        button_layout.setBounds(0, 750, APP_WIDTH, 150);
 
         main_simulation_frame.setLayout(null);
 
@@ -59,22 +59,29 @@ public class UserInterface {
         //sim_status_scroll.setBounds(0, 0, 200, 800);
         //sim_layout.add(sim_status_scroll);
 
-        JButton move_bus = new JButton("Move Next Bus");
-        move_bus.setBounds(0, 0, move_bus.getPreferredSize().width, move_bus.getPreferredSize().height);
-        button_layout.add(move_bus);
-
-        JButton replay_3_events = new JButton("Go Back 3 Events");
-        JButton replay_2_events = new JButton("Go Back 2 Events");
-        JButton replay_1_events = new JButton("Go Back 1 Event");
-        
-        JButton get_system_efficiency = new JButton("Get System Efficiency");
-
-        move_bus.addActionListener(new ActionListener() {
+        JButton move_bus_button = new JButton("Move Next Bus");
+        move_bus_button.setBounds(0, 0, move_bus_button.getPreferredSize().width,
+                move_bus_button.getPreferredSize().height);
+        move_bus_button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 execute_next();
             }
         });
+
+
+        JButton replay_button = new JButton("Rewind");
+        replay_button.setBounds(0,0, replay_button.getPreferredSize().width, replay_button.getPreferredSize().height);
+
+
+        JPanel system_efficiency = new JPanel();
+        JTextField system_efficiency_text = new JTextField("System Efficiency = 14.32");
+        system_efficiency.add(system_efficiency_text);
+
+        button_layout.add(move_bus_button);
+        button_layout.add(replay_button);
+        button_layout.add(system_efficiency);
+
 
         main_simulation_frame.validate();
         main_simulation_frame.pack();
@@ -226,5 +233,9 @@ public class UserInterface {
             ((JTextField) (stop_box.get(previous_stopID).getComponent(2))).setText("");
             stop_box.get(previous_stopID).getComponent(3).setVisible(false);
         }
+    }
+
+    private void setup_gui() {
+
     }
 }
