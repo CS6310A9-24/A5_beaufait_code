@@ -106,10 +106,8 @@ public class Main {
 
             // Step 4: update bus changes (if any)
             evaluateChanges(bus);
-
             // Step 5: Do passenger exchange at this stop
             passengerExchange(bus, bus.getCurrentStop());
-
             // Step 3: Determine which stop the bus will travel to next (based on the current location and route)
             next_stop_id = buses.get(current_bus_processing).getNextStop();
             // Step 4: Calculate the distance and travel time between the current and next stops
