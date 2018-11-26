@@ -71,7 +71,7 @@ public class Main {
             Bus bus = buses.get(current_bus_processing);
 
             // Step 4: update bus changes (if any)
-            evaluateChanges(bus);
+            evaluateChanges();
 
             // Step 3: Determine which stop the bus will travel to next (based on the current location and route)
             next_stop_id = buses.get(current_bus_processing).getNextStop();
@@ -88,8 +88,14 @@ public class Main {
         }
     }
 
-    public static void evaluateChanges(Bus bus) {
+    // process all the bus changes requested by the client
+    // each bus change is stored in a unique BusChange object
+    // the bus that the change is applied to is specified by the bus_id field in the BusChange object
+    // iterate through every BusChange object and apply the change to the particular bus
+    // delete all the BusChange objects so that no change is applied more than once
+    public static void evaluateChanges() {
         for (BusChange change : bus_changes) {
+            Bus bus = buses.get(change.getBus_id());
             BusChange.ChangeType type = change.getChangeType();
             switch (type) {
                 case SPEED:
@@ -105,6 +111,10 @@ public class Main {
                     bus.changeRoute(routeChange.getNewRouteId(), routeChange.getNewRouteIndex());
                     break;
             }
+        }
+        // remove all BusChange objects from the bus_changes list so they are not processed more than once
+        for (BusChange change : bus_changes) {
+            bus_changes.remove(change);
         }
     }
 }
