@@ -71,7 +71,7 @@ public class Main {
             Bus bus = buses.get(current_bus_processing);
 
             // Step 4: update bus changes (if any)
-            evaluateChanges();
+            evaluateChanges(current_bus_processing);
 
             // Step 3: Determine which stop the bus will travel to next (based on the current location and route)
             next_stop_id = buses.get(current_bus_processing).getNextStop();
@@ -88,33 +88,35 @@ public class Main {
         }
     }
 
-    // process all the bus changes requested by the client
+    // process bus changes on the bus with id bus_id requested by the client
     // each bus change is stored in a unique BusChange object
     // the bus that the change is applied to is specified by the bus_id field in the BusChange object
-    // iterate through every BusChange object and apply the change to the particular bus
-    // delete all the BusChange objects so that no change is applied more than once
-    public static void evaluateChanges() {
+    // delete all the applied BusChange objects so that no change is applied more than once
+    public static void evaluateChanges(int bus_id) {
         for (BusChange change : bus_changes) {
-            Bus bus = buses.get(change.getBus_id());
-            BusChange.ChangeType type = change.getChangeType();
-            switch (type) {
-                case SPEED:
-                    BusSpeedChange speedChange = (BusSpeedChange) change;
-                    bus.setSpeed(speedChange.getNewSpeed());
-                    break;
-                case CAPACITY:
-                    BusCapacityChange capacityChange = (BusCapacityChange) change;
-                    bus.setCapacity(capacityChange.getNewCapacity());
-                    break;
-                case ROUTE:
-                    BusRouteChange routeChange = (BusRouteChange) change;
-                    bus.changeRoute(routeChange.getNewRouteId(), routeChange.getNewRouteIndex());
-                    break;
+            if (change.getBus_id() == bus_id) {
+                BusChange.ChangeType type = change.getChangeType();
+                switch (type) {
+                    case SPEED:
+                        BusSpeedChange speedChange = (BusSpeedChange) change;
+                        buses.get(bus_id).setSpeed(speedChange.getNewSpeed());
+                        break;
+                    case CAPACITY:
+                        BusCapacityChange capacityChange = (BusCapacityChange) change;
+                        buses.get(bus_id).setCapacity(capacityChange.getNewCapacity());
+                        break;
+                    case ROUTE:
+                        BusRouteChange routeChange = (BusRouteChange) change;
+                        buses.get(bus_id).changeRoute(routeChange.getNewRouteId(), routeChange.getNewRouteIndex());
+                        break;
+                }
             }
         }
-        // remove all BusChange objects from the bus_changes list so they are not processed more than once
+        // remove BusChange objects applied to bus with id bus_id so they are not processed more than once
         for (BusChange change : bus_changes) {
-            bus_changes.remove(change);
+            if (change.getBus_id() == bus_id) {
+                bus_changes.remove(change);
+            }
         }
     }
 }
