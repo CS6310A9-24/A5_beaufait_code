@@ -31,8 +31,7 @@ public class Simulation {
     public void setup(String[] args) {
 
         final String DELIMITER = ",";
-        //String scenarioFile = args[0];
-        String scenarioFile = "resources/test_scenario.txt";
+        String scenarioFile = args[0];
         // Step 1: Read the data from the provided scenario configuration file.
         try {
             Scanner takeCommand = new Scanner(new File(scenarioFile));
@@ -105,11 +104,6 @@ public class Simulation {
         // Step 6: Update system state and generate new events as needed.
         ui.move_bus();
         queue.updateEventExecutionTimes(queue.currentEventId, next_time);
-    }
-    public void updateEventExecutionTimes() {
-        // Step 6: Update system state and generate new events as needed.
-        queue.updateEventExecutionTimes(queue.currentEventId, next_time);
-
     }
 
     public static Map<Integer, Bus> getBuses() {

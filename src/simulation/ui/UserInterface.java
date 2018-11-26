@@ -17,9 +17,6 @@ public class UserInterface {
     public static JPanel button_layout = new JPanel();
     public static Map<Integer, StopBox> stop_boxes = new HashMap<>();
 
-    public static ImageIcon stop_icon = new ImageIcon("simulation/bus_stop_img.png");
-    public static ImageIcon bus_icon = new ImageIcon("simulation/bus_img.png");
-
     private int APP_WIDTH = 1200;
     private int APP_HEIGHT = 900;
     private JTextField system_efficiency_text;
@@ -129,8 +126,6 @@ public class UserInterface {
         stop_boxes.get(previous_stopID).revalidate();
         stop_boxes.get(current_stopID).repaint();
         stop_boxes.get(previous_stopID).repaint();
-
-        simulation.updateEventExecutionTimes();
     }
 
     public void updateSystemEfficiency(String text) {
