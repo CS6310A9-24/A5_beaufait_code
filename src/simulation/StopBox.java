@@ -94,7 +94,8 @@ public class StopBox extends JPanel {
     public void updateBusInfo(int bus_id) {
         int compID = 1000;
         for (int i = 0; i < getComponentCount(); i++) {
-            if (getComponent(i).getName().equals(Integer.toString(bus_id))) {
+            Component currentComponent = getComponent(i);
+            if (currentComponent.getName().equals(Integer.toString(bus_id))) {
                 compID = i;
             }
         }
