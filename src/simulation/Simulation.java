@@ -87,7 +87,9 @@ public class Simulation {
             System.out.println();
         }
 
+    }
 
+    public void execute_next(){
         // Step 2: Determine which bus should be selected for processing(based on lowest arrival time)
         queue.chooseNextEvent();
         current_bus_processing = queue.listEvents.get(queue.currentEventId).getBusId();
@@ -99,10 +101,11 @@ public class Simulation {
                 queue.listEvents.get(queue.currentEventId).getRank();
         // Step 5: Display the output line of text to the display
         next_passengers = buses.get(current_bus_processing).getNumPassengersRiding();
-        System.out.println("b:" + current_bus_processing + "->s:" + next_stop_id + "@" + next_time + "//p:" + next_passengers + "/main_simulation_frame:0");
-
+        System.out.println("b:"+current_bus_processing +"->s:"+next_stop_id+"@"+next_time+"//p:"+next_passengers+"/f:0");
+        // Step 6: Update system state and generate new events as needed.
+        ui.move_bus();
+        queue.updateEventExecutionTimes(queue.currentEventId, next_time);
     }
-
     public void updateEventExecutionTimes() {
         // Step 6: Update system state and generate new events as needed.
         queue.updateEventExecutionTimes(queue.currentEventId, next_time);

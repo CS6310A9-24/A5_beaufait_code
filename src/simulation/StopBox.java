@@ -1,9 +1,11 @@
+package simulation;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class StopBox extends JPanel{
+public class StopBox extends JPanel {
 
     public static ImageIcon stop_icon = new ImageIcon("bus_stop_img.png");
     public static ImageIcon bus_icon = new ImageIcon("bus_img.png");
@@ -14,13 +16,13 @@ public class StopBox extends JPanel{
     private JLabel bus_img = new JLabel(bus_icon);
     private JTextField pax_info = new JTextField();
 
-    private Map<Integer, JTextField> busTextFields = new HashMap();//integer is the bus_id
+    private Map<Integer, JTextField> busTextFields = new HashMap<>();//integer is the bus_id
 
     private String name;
     private int stopID;
 
 
-    public StopBox(int stopID, String name){
+    public StopBox(int stopID, String name) {
         this.stopID = stopID;
         setLayout(new GridBagLayout());
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -41,7 +43,7 @@ public class StopBox extends JPanel{
         c.gridy = 0;
         c.anchor = GridBagConstraints.CENTER;
         c.gridwidth = 2;
-        bus_stop_info.setFont(new Font("Courier", Font.BOLD,8));
+        bus_stop_info.setFont(new Font("Courier", Font.BOLD, 8));
         bus_stop_info.setEditable(false);
         bus_stop_info.setName("bus_stop_info");
         bus_stop_info.setText(this.name);
@@ -71,10 +73,10 @@ public class StopBox extends JPanel{
 
     }
 
-    public void add_busTextField(int bus_id, String s){
+    public void add_busTextField(int bus_id, String s) {
         c.anchor = GridBagConstraints.CENTER;
         JTextField bus_info = new JTextField(s);
-        bus_info.setFont(new Font("Courier", Font.BOLD,8));
+        bus_info.setFont(new Font("Courier", Font.BOLD, 8));
         bus_info.setEditable(false);
         bus_info.setName(Integer.toString(bus_id));
 
@@ -89,10 +91,10 @@ public class StopBox extends JPanel{
         resize_box();
     }
 
-    public void updateBusInfo(int bus_id){
+    public void updateBusInfo(int bus_id) {
         int compID = 1000;
-        for(int i = 0; i < getComponentCount(); i++){
-            if(getComponent(i).getName().equals(Integer.toString(bus_id))){
+        for (int i = 0; i < getComponentCount(); i++) {
+            if (getComponent(i).getName().equals(Integer.toString(bus_id))) {
                 compID = i;
             }
         }
@@ -104,27 +106,27 @@ public class StopBox extends JPanel{
         resize_box();
     }
 
-    public void show_buses(){
-        if(busTextFields.size() != 0) {
+    public void show_buses() {
+        if (busTextFields.size() != 0) {
             this.bus_img.setVisible(true);
-        }else{
+        } else {
             this.bus_img.setVisible(false);
         }
 
         resize_box();
     }
 
-    public void setPaxInfo(String s){
+    public void setPaxInfo(String s) {
         this.pax_info.setText(s);
         resize_box();
     }
 
-    public void init_bus(){
+    public void init_bus() {
         this.bus_img.setVisible(true);
         resize_box();
     }
 
-    public void resize_box(){
+    public void resize_box() {
         setPreferredSize(getPreferredSize());
         revalidate();
         repaint();
