@@ -1,0 +1,20 @@
+add_stop,5,NEP/NE Perimeter,0,0.13,0.24
+add_stop,11,ART/Arts Studio,0,0.11,0.31
+add_stop,16,NTE/North End,0,0.2,0.21
+add_route,52,2,UpperHalf
+add_route,54,4,LowerHalf
+add_route,56,6,RoundTrip
+extend_route,52,16
+extend_route,52,5
+extend_route,54,11
+extend_route,54,5
+extend_route,56,16
+extend_route,56,5
+extend_route,56,11
+extend_route,56,5
+add_bus,67,52,0,15,27
+add_bus,68,54,0,15,40
+add_bus,69,56,1,10,60
+add_event,0,move_bus,67
+add_event,20,move_bus,68
+add_event,0,move_bus,69
