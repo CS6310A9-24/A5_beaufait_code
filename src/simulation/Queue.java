@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Queue {
     // Declare Queue attributes
-    public ArrayList<Evnt> listEvents;
+    public ArrayList<Event> listEvents;
     public int currentEventId;
     public Simulation simulation;
 
@@ -17,7 +17,7 @@ public class Queue {
 
     // Queue Methods
     public void addEventToPool(int eventIndex, int eventRank, String eventType, int objectId) {
-        this.listEvents.add(eventIndex, new Evnt(eventIndex, eventRank, eventType, objectId));
+        this.listEvents.add(eventIndex, new Event(eventIndex, eventRank, eventType, objectId));
     }
 
     public void chooseNextEvent() {

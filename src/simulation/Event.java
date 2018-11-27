@@ -1,14 +1,14 @@
 package simulation;
 
-public class Evnt {
-    // Declare Evnt attributes
+public class Event {
+    // Declare Event attributes
     private int id;
     private int rank;
     private String type;
     private int busId;
 
-    // Evnt Constructor
-    public Evnt(int id, int time, String evnt_type, int object_id) {
+    // Event Constructor
+    public Event(int id, int time, String evnt_type, int object_id) {
         this.id = id;
         this.rank = time;
         this.type = evnt_type;
@@ -23,7 +23,6 @@ public class Evnt {
     }
     public void setRank(int new_rank){
         this.rank = new_rank;
-        return;
     }
     public String getType() {
         return type;
