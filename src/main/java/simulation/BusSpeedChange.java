@@ -1,3 +1,5 @@
+package simulation;
+
 public class BusSpeedChange extends BusChange {
     private double new_speed;
 

@@ -1,22 +1,37 @@
-import java.util.*;
+package simulation;
+
+import simulation.ui.UserInterface;
+
 import java.io.File;
-import java.lang.*;
+import java.util.*;
 import java.util.stream.Collectors;
 
-public class Main {
-    public static Map<Integer, Bus> buses = new HashMap();
-    public static Map<Integer,Stop> stops = new HashMap();
-    public static Map<Integer,Route> routes = new HashMap();
+public class Simulation {
+
+    public static Map<Integer, Bus> buses = new HashMap<>();
+    public static Map<Integer, Stop> stops = new HashMap<>();
+    public static Map<Integer, Route> routes = new HashMap<>();
     public static List<BusChange> bus_changes = new ArrayList<>();
-    public static void main(String[] args) {
-        // Initialize variables
-        int event_index = -1;
-        int current_bus_processing, next_stop_id, next_time, next_passengers;
-        double next_distance;
+
+    public int current_bus_processing, next_stop_id, next_time, next_passengers;
+    public double next_distance;
+
+    public int event_index = -1;
+    public Queue queue;
+
+
+    private UserInterface ui;
+
+    public Simulation() {
+
+        ui = new UserInterface(this);
+        queue = new Queue(this);
+    }
+
+    public void setup(String[] args) {
+
         final String DELIMITER = ",";
         String scenarioFile = args[0];
-        Queue queue = new Queue();
-
         // Step 1: Read the data from the provided scenario configuration file.
         try {
             Scanner takeCommand = new Scanner(new File(scenarioFile));
@@ -29,13 +44,14 @@ public class Main {
                     case "add_stop":
                         int stop_index = Integer.parseInt((tokens[1]));
                         stops.put(stop_index, new Stop(Integer.parseInt(tokens[1]), tokens[2],
-                                                       Integer.parseInt(tokens[3]), Double.parseDouble(tokens[4]),
-                                                       Double.parseDouble(tokens[5])));
+                                Integer.parseInt(tokens[3]), Double.parseDouble(tokens[4]),
+                                Double.parseDouble(tokens[5])));
+                        ui.add_stop_GUI(stop_index);
                         break;
                     case "add_route":
                         int route_index = Integer.parseInt(tokens[1]);
                         routes.put(route_index, new Route(Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]),
-                                   tokens[3]));
+                                tokens[3]));
                         break;
                     case "extend_route":
                         route_index = Integer.parseInt(tokens[1]);
@@ -44,14 +60,15 @@ public class Main {
                     case "add_bus":
                         int bus_index = Integer.parseInt(tokens[1]);
                         buses.put(bus_index, new Bus(Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]),
-                                                     Integer.parseInt(tokens[3]), Integer.parseInt(tokens[4]),
-                                                     Integer.parseInt(tokens[5]), Integer.parseInt(tokens[6]),
-                                                     Integer.parseInt(tokens[7]), Double.parseDouble(tokens[8])));
+                                Integer.parseInt(tokens[3]), Integer.parseInt(tokens[4]),
+                                Integer.parseInt(tokens[5]), Integer.parseInt(tokens[6]),
+                                Integer.parseInt(tokens[7]), Double.parseDouble(tokens[8])));
+                        ui.add_bus_GUI(bus_index);
                         break;
                     case "add_event":
                         ++event_index;
                         queue.addEventToPool(event_index, Integer.parseInt(tokens[1]), tokens[2],
-                                              Integer.parseInt(tokens[3]));
+                                Integer.parseInt(tokens[3]));
                         break;
                     default:
                         System.out.println(" command not recognized");
@@ -63,6 +80,7 @@ public class Main {
             e.printStackTrace();
             System.out.println();
         }
+
 
         // Step 2: Read the data from the provided passenger probabilities file
         final String PASSENGER_PROBABILITY_DELIMITER = ",";
@@ -97,30 +115,6 @@ public class Main {
             e.printStackTrace();
             System.out.println();
         }
-        // Loop for twenty (20) iterations:
-        for (int i = 0; i < 20; i++) {
-            // Step 3: Determine which bus should be selected for processing(based on lowest arrival time)
-            queue.chooseNextEvent();
-            current_bus_processing = queue.listEvents.get(queue.currentEventId).getBusId();
-            Bus bus = buses.get(current_bus_processing);
-
-            // Step 4: update bus changes (if any)
-            evaluateChanges(bus);
-            // Step 5: Do passenger exchange at this stop
-            passengerExchange(bus, bus.getCurrentStop());
-            // Step 3: Determine which stop the bus will travel to next (based on the current location and route)
-            next_stop_id = buses.get(current_bus_processing).getNextStop();
-            // Step 4: Calculate the distance and travel time between the current and next stops
-            next_distance = buses.get(current_bus_processing).calculateDistance();
-            next_time = buses.get(current_bus_processing).calculateTravelTime(next_distance) +
-                        queue.listEvents.get(queue.currentEventId).getRank();
-            // Step 5: Display the output line of text to the display
-            next_passengers = buses.get(current_bus_processing).getNumPassengersRiding();
-            System.out.println("b:"+current_bus_processing +"->s:"+next_stop_id+"@"+next_time+"//p:"+next_passengers+"/f:0");
-            // Step 6: Update system state (increment bus route index [stop]) and generate new events as needed.
-            queue.updateEventExecutionTimes(queue.currentEventId, next_time);
-
-        }
     }
 
     public static void evaluateChanges(Bus bus) {
@@ -141,6 +135,29 @@ public class Main {
                     break;
             }
         }
+    }
+
+    public void execute_next(){
+        queue.chooseNextEvent();
+        current_bus_processing = queue.listEvents.get(queue.currentEventId).getBusId();
+        Bus bus = buses.get(current_bus_processing);
+
+        // Step 4: update bus changes (if any)
+        evaluateChanges(bus);
+        // Step 5: Do passenger exchange at this stop
+        passengerExchange(bus, bus.getCurrentStop());
+        // Step 3: Determine which stop the bus will travel to next (based on the current location and route)
+        next_stop_id = buses.get(current_bus_processing).getNextStop();
+        // Step 4: Calculate the distance and travel time between the current and next stops
+        next_distance = buses.get(current_bus_processing).calculateDistance();
+        next_time = buses.get(current_bus_processing).calculateTravelTime(next_distance) +
+                queue.listEvents.get(queue.currentEventId).getRank();
+        // Step 5: Display the output line of text to the display
+        next_passengers = buses.get(current_bus_processing).getNumPassengersRiding();
+        System.out.println("b:"+current_bus_processing +"->s:"+next_stop_id+"@"+next_time+"//p:"+next_passengers+"/f:0");
+        // Step 6: Update system state and generate new events as needed.
+        ui.move_bus();
+        queue.updateEventExecutionTimes(queue.currentEventId, next_time);
     }
 
     public static void passengerExchange(Bus bus, Stop stop) {
@@ -210,5 +227,93 @@ public class Main {
         }
         System.out.println("number of people at station: " + numPassengersWaiting + "\n");
         stop.setNumPassengersWaiting(numPassengersWaiting);
+    }
+
+    public static Map<Integer, Bus> getBuses() {
+        return buses;
+    }
+
+    public static void setBuses(Map<Integer, Bus> buses) {
+        Simulation.buses = buses;
+    }
+
+    public static Map<Integer, Stop> getStops() {
+        return stops;
+    }
+
+    public static void setStops(Map<Integer, Stop> stops) {
+        Simulation.stops = stops;
+    }
+
+    public static Map<Integer, Route> getRoutes() {
+        return routes;
+    }
+
+    public static void setRoutes(Map<Integer, Route> routes) {
+        Simulation.routes = routes;
+    }
+
+    public int getCurrent_bus_processing() {
+        return current_bus_processing;
+    }
+
+    public void setCurrent_bus_processing(int current_bus_processing) {
+        this.current_bus_processing = current_bus_processing;
+    }
+
+    public int getNext_stop_id() {
+        return next_stop_id;
+    }
+
+    public void setNext_stop_id(int next_stop_id) {
+        this.next_stop_id = next_stop_id;
+    }
+
+    public int getNext_time() {
+        return next_time;
+    }
+
+    public void setNext_time(int next_time) {
+        this.next_time = next_time;
+    }
+
+    public int getNext_passengers() {
+        return next_passengers;
+    }
+
+    public void setNext_passengers(int next_passengers) {
+        this.next_passengers = next_passengers;
+    }
+
+    public double getNext_distance() {
+        return next_distance;
+    }
+
+    public void setNext_distance(double next_distance) {
+        this.next_distance = next_distance;
+    }
+
+    public int getEvent_index() {
+        return event_index;
+    }
+
+    public void setEvent_index(int event_index) {
+        this.event_index = event_index;
+    }
+
+    public Queue getQueue() {
+        return queue;
+    }
+
+    public void setQueue(Queue queue) {
+        this.queue = queue;
+    }
+
+    public UserInterface getUi() {
+        return ui;
+    }
+
+    public void setUi(UserInterface ui) {
+        this.ui = ui;
     }
 }

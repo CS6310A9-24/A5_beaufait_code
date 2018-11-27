@@ -1,3 +1,5 @@
+package simulation;
+
 import java.util.Random;
 
 public class Stop {
