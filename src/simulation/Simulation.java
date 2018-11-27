@@ -115,30 +115,6 @@ public class Simulation {
             e.printStackTrace();
             System.out.println();
         }
-        // Loop for twenty (20) iterations:
-        for (int i = 0; i < 20; i++) {
-            // Step 3: Determine which bus should be selected for processing(based on lowest arrival time)
-            queue.chooseNextEvent();
-            current_bus_processing = queue.listEvents.get(queue.currentEventId).getBusId();
-            Bus bus = buses.get(current_bus_processing);
-
-            // Step 4: update bus changes (if any)
-            evaluateChanges(bus);
-            // Step 5: Do passenger exchange at this stop
-            passengerExchange(bus, bus.getCurrentStop());
-            // Step 3: Determine which stop the bus will travel to next (based on the current location and route)
-            next_stop_id = buses.get(current_bus_processing).getNextStop();
-            // Step 4: Calculate the distance and travel time between the current and next stops
-            next_distance = buses.get(current_bus_processing).calculateDistance();
-            next_time = buses.get(current_bus_processing).calculateTravelTime(next_distance) +
-                    queue.listEvents.get(queue.currentEventId).getRank();
-            // Step 5: Display the output line of text to the display
-            next_passengers = buses.get(current_bus_processing).getNumPassengersRiding();
-            System.out.println("b:"+current_bus_processing +"->s:"+next_stop_id+"@"+next_time+"//p:"+next_passengers+"/f:0");
-            // Step 6: Update system state (increment bus route index [stop]) and generate new events as needed.
-            queue.updateEventExecutionTimes(queue.currentEventId, next_time);
-
-        }
     }
 
     public static void evaluateChanges(Bus bus) {
@@ -164,6 +140,12 @@ public class Simulation {
     public void execute_next(){
         queue.chooseNextEvent();
         current_bus_processing = queue.listEvents.get(queue.currentEventId).getBusId();
+        Bus bus = buses.get(current_bus_processing);
+
+        // Step 4: update bus changes (if any)
+        evaluateChanges(bus);
+        // Step 5: Do passenger exchange at this stop
+        passengerExchange(bus, bus.getCurrentStop());
         // Step 3: Determine which stop the bus will travel to next (based on the current location and route)
         next_stop_id = buses.get(current_bus_processing).getNextStop();
         // Step 4: Calculate the distance and travel time between the current and next stops
