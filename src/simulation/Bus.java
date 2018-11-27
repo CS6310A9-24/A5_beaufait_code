@@ -21,6 +21,7 @@ public class Bus {
     private int fuelCapacity;
     private int previousRouteIndex;
     private Simulation simulation;
+    private int isFirstStop;
 
     // Bus Constructor
     public Bus(int bus_id, int route_id, int route_index, int initial_passengers, int max_capacity,
@@ -39,6 +40,7 @@ public class Bus {
         this.avgSpeed = speed;
         this.stopId = simulation.routes.get(this.routeId).getStopIdByIndex(this.routeIndex);
         this.previousRouteIndex = 0;
+        this.isFirstStop = 1;
     }
 
     // Access methods
@@ -80,7 +82,15 @@ public class Bus {
     }
 
     public int getPreviousRouteIndex() {
-        return this.previousRouteIndex;
+        if(isFirstStop == 1) {
+            this.isFirstStop = 0;
+            return this.routeIndex;
+        }else if(this.routeIndex == 0){
+            this.routeIndex = simulation.routes.get(this.routeId).getListStopIds().size() - 1;
+            return this.routeIndex;
+        }else{
+            return this.routeIndex - 1;
+        }
     }
 
     // Methods
