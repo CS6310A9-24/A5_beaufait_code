@@ -15,6 +15,7 @@ public class UserInterface {
     public JFrame main_simulation_frame = new JFrame("MTS Simulation Control");
     public static JPanel world_layout = new JPanel();
     public static JPanel button_layout = new JPanel();
+    public JPanel status_layout = new JPanel();
     public static Map<Integer, StopBox> stop_boxes = new HashMap<>();
 
     private int APP_WIDTH = 1200;
@@ -33,15 +34,14 @@ public class UserInterface {
         button_layout.setLayout(new GridLayout(1, 8, 0, 10));
         button_layout.setBounds(0, 750, APP_WIDTH, 150);
 
-        main_simulation_frame.setLayout(null);
+        main_simulation_frame.setLayout(new BorderLayout());
 
-        main_simulation_frame.getContentPane().add(world_layout);
-        main_simulation_frame.getContentPane().add(button_layout);
+        main_simulation_frame.getContentPane().add(world_layout, BorderLayout.CENTER);
+        main_simulation_frame.getContentPane().add(button_layout, BorderLayout.PAGE_END);
+        main_simulation_frame.getContentPane().add(status_layout, BorderLayout.PAGE_START);
 
 
         JButton move_bus_button = new JButton("Move Next Bus");
-        move_bus_button.setBounds(0, 0, move_bus_button.getPreferredSize().width,
-                move_bus_button.getPreferredSize().height);
         move_bus_button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -51,7 +51,6 @@ public class UserInterface {
 
 
         JButton replay_button = new JButton("Rewind");
-        replay_button.setBounds(0, 0, replay_button.getPreferredSize().width, replay_button.getPreferredSize().height);
 
 
         JPanel system_efficiency = new JPanel();
@@ -60,7 +59,7 @@ public class UserInterface {
 
         button_layout.add(move_bus_button);
         button_layout.add(replay_button);
-        button_layout.add(system_efficiency);
+        status_layout.add(system_efficiency);
 
 
         main_simulation_frame.validate();
