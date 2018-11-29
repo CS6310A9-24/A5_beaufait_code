@@ -80,7 +80,7 @@ public class BusChangeUI {
                 }
             }
         });
-        
+
         p.add(optionList);
         p.add(routeList);
         p.add(stopList);
@@ -92,6 +92,20 @@ public class BusChangeUI {
 
         if (result == JOptionPane.OK_OPTION) {
             System.out.println(optionList.getSelectedItem());
+
+            switch (optionList.getSelectedItem().toString()){
+                case "Speed":
+                    //int updateValue = Integer.parseInt(input.getText());
+                    break;
+
+                case "Capacity":
+                    break;
+
+                case "Route":
+                    break;
+
+            }
+            System.out.println(routeList.getSelectedItem());
         }
     }
 }
