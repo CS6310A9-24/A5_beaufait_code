@@ -1,3 +1,5 @@
+package simulation;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +38,5 @@ public class Route {
     // Extend Route
     public void addStopIdtoRoute(int new_stop_id) {
         this.listStopIds.add(new_stop_id);
-        return;
     }
 }
