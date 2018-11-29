@@ -1,3 +1,5 @@
+package simulation;
+
 public class Location {
     // Declare Location attributes
     private double latitude;

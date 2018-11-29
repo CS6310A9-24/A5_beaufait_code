@@ -1,0 +1,42 @@
+add_depot,0,DEP/Repair Depot,0.2,0.28
+add_stop,1,SWP/Southwest Perimeter,0,0.03,0.04
+add_stop,2,MID/Midway,0,0.03,0.2
+add_stop,4,EAP/East Perimeter,0,0.08,0.24
+add_stop,5,NEP/Northeast Perimeter,0,0.13,0.24
+add_stop,6,SHP/Shopping Center,0,0.13,0.12
+add_stop,7,NWP/Northwest Perimeter,0,0.13,0.04
+add_stop,8,WTE/West End,0,0.08,0
+add_stop,9,STA/Sports Stadium,0,0.08,0.08
+add_stop,10,FPT/Four Points,0,0.08,0.16
+add_stop,12,LIB/Library,0,0.05,0.31
+add_stop,13,ZOO/Zoo,0,0.08,0.36
+add_stop,14,PRK/Parks and Rec,0,0.05,0.4
+add_route,51,1,Perimeter
+add_route,55,5,Scenic
+extend_route,51,1
+extend_route,51,2
+extend_route,51,7
+extend_route,51,4
+extend_route,51,5
+extend_route,51,6
+extend_route,51,7
+extend_route,55,8
+extend_route,55,9
+extend_route,55,10
+extend_route,55,4
+extend_route,55,12
+extend_route,55,13
+extend_route,55,14
+extend_route,55,13
+extend_route,55,12
+extend_route,55,4
+extend_route,55,10
+extend_route,55,9
+add_bus,60,51,0,0,15,100,300,20
+add_bus,61,51,3,0,15,100,300,40
+add_bus,63,55,0,0,15,100,300,20
+add_bus,64,55,4,0,15,100,300,40
+add_event,0,move_bus,60
+add_event,0,move_bus,61
+add_event,0,move_bus,63
+add_event,0,move_bus,64

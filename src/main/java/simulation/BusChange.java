@@ -1,6 +1,8 @@
+package simulation;
+
 abstract class BusChange {
     enum ChangeType {
-        SPEED, ROUTE, CAPACITY;
+        SPEED, ROUTE, CAPACITY
     }
 
     private ChangeType type;

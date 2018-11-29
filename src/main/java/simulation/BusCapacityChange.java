@@ -1,3 +1,5 @@
+package simulation;
+
 public class BusCapacityChange extends BusChange {
     private int new_capacity;
 
