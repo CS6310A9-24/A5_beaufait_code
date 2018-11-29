@@ -117,22 +117,34 @@ public class Simulation {
         }
     }
 
-    public static void evaluateChanges(Bus bus) {
+    // process bus changes on the current moving bus
+    // pre:: bus_id is the id of the current moving bus
+    // each bus change is stored in a unique BusChange object
+    // post:: applies the change to the current moving bus and deletes all the BusChange objects so that no change is applied more than once
+    public static void evaluateChanges(int bus_id) {
         for (BusChange change : bus_changes) {
-            BusChange.ChangeType type = change.getChangeType();
-            switch (type) {
-                case SPEED:
-                    BusSpeedChange speedChange = (BusSpeedChange) change;
-                    bus.setSpeed(speedChange.getNewSpeed());
-                    break;
-                case CAPACITY:
-                    BusCapacityChange capacityChange = (BusCapacityChange) change;
-                    bus.setCapacity(capacityChange.getNewCapacity());
-                    break;
-                case ROUTE:
-                    BusRouteChange routeChange = (BusRouteChange) change;
-                    bus.changeRoute(routeChange.getNewRouteId(), routeChange.getNewRouteIndex());
-                    break;
+            if (change.getBus_id() == bus_id) {
+                BusChange.ChangeType type = change.getChangeType();
+                switch (type) {
+                    case SPEED:
+                        BusSpeedChange speedChange = (BusSpeedChange) change;
+                        buses.get(bus_id).setSpeed(speedChange.getNewSpeed());
+                        break;
+                    case CAPACITY:
+                        BusCapacityChange capacityChange = (BusCapacityChange) change;
+                        buses.get(bus_id).setCapacity(capacityChange.getNewCapacity());
+                        break;
+                    case ROUTE:
+                        BusRouteChange routeChange = (BusRouteChange) change;
+                        buses.get(bus_id).changeRoute(routeChange.getNewRouteId(), routeChange.getNewRouteIndex());
+                        break;
+                }
+            }
+        }
+        // remove all BusChange objects applied to the current moving bus from the bus_changes list so they are not processed more than once
+        for (BusChange change : bus_changes) {
+            if (change.getBus_id() == bus_id) {
+                bus_changes.remove(change);
             }
         }
     }
@@ -143,7 +155,7 @@ public class Simulation {
         Bus bus = buses.get(current_bus_processing);
 
         // Step 4: update bus changes (if any)
-        evaluateChanges(bus);
+        evaluateChanges(current_bus_processing);
         // Step 5: Do passenger exchange at this stop
         passengerExchange(bus, bus.getCurrentStop());
         // Step 3: Determine which stop the bus will travel to next (based on the current location and route)

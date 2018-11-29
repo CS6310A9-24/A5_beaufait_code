@@ -17,4 +17,8 @@ abstract class BusChange {
         return this.type;
     }
 
+    public int getBus_id() {
+        return this.bus_id;
+    }
+
 }
