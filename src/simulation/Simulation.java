@@ -3,9 +3,7 @@ package simulation;
 import simulation.ui.UserInterface;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class Simulation {
 
@@ -18,6 +16,7 @@ public class Simulation {
 
     public int event_index = -1;
     public Queue queue;
+    public static List routeIDs;
 
 
     private UserInterface ui;
@@ -26,6 +25,7 @@ public class Simulation {
 
         ui = new UserInterface(this);
         queue = new Queue(this);
+        routeIDs = new ArrayList();
     }
 
     public void setup(String[] args) {
@@ -57,6 +57,7 @@ public class Simulation {
                         int route_index = Integer.parseInt(tokens[1]);
                         routes.put(route_index, new Route(Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]),
                                 tokens[3]));
+                        this.routeIDs.add(Integer.parseInt(tokens[1]));
                         break;
                     case "extend_route":
                         route_index = Integer.parseInt(tokens[1]);
@@ -193,4 +194,6 @@ public class Simulation {
     public void setUi(UserInterface ui) {
         this.ui = ui;
     }
+
+    public static List getRouteIDs(){return routeIDs; }
 }

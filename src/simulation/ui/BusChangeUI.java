@@ -25,10 +25,6 @@ public class BusChangeUI {
 
         String selection = "";
 
-        for(int i = 0; i < Simulation.routes.size(); i++){
-            System.out.println(Simulation.routes.keySet().toString());
-        }
-
         routeList.setVisible(false);
         stopList.setVisible(false);
 
@@ -54,36 +50,45 @@ public class BusChangeUI {
                     p.repaint();
                 }
                 if(selected.toString().equals("Route")) {
-                    System.out.println("Route");
+                    //System.out.println("Route");
                     input.setVisible(false);
+                    routeList.addItem("");
+                    for(int i = 0; i < Simulation.getRouteIDs().size(); i++){
+                        routeList.addItem(Simulation.routeIDs.get(i));
+                    }
                     routeList.setVisible(true);
 
-                    for(int i = 0; i < Simulation.routes.get(routeList.getSelectedItem()).getListStopIds().size(); i++){
-                        stopList.addItem(Simulation.routes.get(routeList.getSelectedItem()).getListStopIds().get(i));
-                    }
+                    routeList.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            e.getSource();
+
+                            Object routeSelection = routeList.getSelectedItem();
+                            stopList.removeAllItems();
+                            for(int i = 0; i < Simulation.getRoutes().get(routeSelection).getListStopIds().size(); i++){
+                                stopList.addItem(Simulation.getRoutes().get(routeSelection).getListStopIds().get(i));
+                            }
+                        }
+                    });
                     stopList.setVisible(true);
                 }
                 if(selected.toString().equals("Capacity")) {
-                    System.out.println("Capacity");
+                    //System.out.println("Capacity");
                     input.setVisible(true);
                     routeList.setVisible(false);
                     stopList.setVisible(false);
                 }
             }
         });
-
-        for(int i = 0; i < p.getComponentCount(); i++){
-            System.out.println(i + " ");
-        }
-
+        
         p.add(optionList);
         p.add(routeList);
         p.add(stopList);
         p.add(input);
 
         int result = JOptionPane.showConfirmDialog(null, p,"Change bus # " + this.bus_id, JOptionPane.OK_CANCEL_OPTION);
-        int value = Integer.parseInt(input.getText());
-        System.out.println(value);
+        //int value = Integer.parseInt(input.getText());
+        //System.out.println(value);
 
         if (result == JOptionPane.OK_OPTION) {
             System.out.println(optionList.getSelectedItem());
