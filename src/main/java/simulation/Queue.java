@@ -24,7 +24,7 @@ public class Queue {
         int lowestRank = 10000000;
         int lowestEventId = Integer.MIN_VALUE;
         int compareRank, compareEventId;
-        int lowestBusId, compareBusId;
+        int lowestBusId, lowestStopId, compareBusId, compareStopId;
         double lowestDistance, compareDistance;
         int lowestTime, compareTime;
         for (int j = 0; j < this.listEvents.size(); j++) {
@@ -35,10 +35,12 @@ public class Queue {
                 lowestEventId = compareEventId;
             } else if (lowestRank == compareRank) {
                 lowestBusId = this.listEvents.get(lowestEventId).getBusId();
-                lowestDistance = simulation.buses.get(lowestBusId).calculateDistance();
+                lowestStopId = simulation.buses.get(lowestBusId).getNextStop();
+                lowestDistance = simulation.buses.get(lowestBusId).calculateDistance(lowestStopId);
                 lowestTime = simulation.buses.get(lowestBusId).calculateTravelTime(lowestDistance);
                 compareBusId = this.listEvents.get(compareEventId).getBusId();
-                compareDistance = simulation.buses.get(compareBusId).calculateDistance();
+                compareStopId = simulation.buses.get(compareBusId).getNextStop();
+                compareDistance = simulation.buses.get(compareBusId).calculateDistance(compareStopId);
                 compareTime = simulation.buses.get(compareBusId).calculateTravelTime(compareDistance);
                 if (lowestTime > compareTime) {
                     lowestRank = compareRank;

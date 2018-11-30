@@ -140,11 +140,10 @@ public class Bus {
     }
 
     // Methods
-    public double calculateDistance() {
-        int current_stopID, next_stopID;
+    public double calculateDistance(int next_stopID) {
+        int current_stopID;
         double[] current_location, next_location;
         current_stopID = simulation.routes.get(this.routeId).getStopIdByIndex(this.routeIndex);
-        next_stopID = getNextStop();
         current_location = simulation.stops.get(current_stopID).getLocation();
         next_location = simulation.stops.get(next_stopID).getLocation();
         this.distanceNextStop = 70.0 * Math.sqrt((Math.pow((next_location[0] - current_location[0]), 2) +
