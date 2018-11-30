@@ -21,7 +21,9 @@ public class Bus {
     private int fuelCapacity;
     private int previousRouteIndex;
     private Simulation simulation;
-    private int isFirstStop;
+    private boolean isFirstStop;
+    public boolean isNewRte;
+    public int lastStopLastRte;
 
     // Bus Constructor
     public Bus(int bus_id, int route_id, int route_index, int initial_passengers, int max_capacity,
@@ -40,7 +42,7 @@ public class Bus {
         this.avgSpeed = speed;
         this.stopId = simulation.routes.get(this.routeId).getStopIdByIndex(this.routeIndex);
         this.previousRouteIndex = 0;
-        this.isFirstStop = 1;
+        this.isFirstStop = true;
 
         // If client updates bus route and route index, those values will be reflected in these two attributes.
         // The reason for adding these two extra fields (a.o.t. overriding routeId and routeIndex) is that, for calculating distance and time from bus' current stop to next stop, Main looks at routeId and routeIndex to determine current stop.
@@ -85,12 +87,15 @@ public class Bus {
     }
 
     public int getPreviousRouteIndex() {
-        if (isFirstStop == 1) {
-            this.isFirstStop = 0;
+        if (isFirstStop == true) {
+            this.isFirstStop = false;
             return this.routeIndex;
         } else if (this.routeIndex == 0) {
             this.routeIndex = simulation.routes.get(this.routeId).getListStopIds().size() - 1;
             return this.routeIndex;
+        } else if(isNewRte == true){
+            isNewRte = false;
+            return lastStopLastRte;
         } else {
             return this.routeIndex - 1;
         }
@@ -287,11 +292,15 @@ public class Bus {
         this.simulation = simulation;
     }
 
-    public int getIsFirstStop() {
+    public boolean getIsFirstStop() {
         return isFirstStop;
     }
 
-    public void setIsFirstStop(int isFirstStop) {
+    public void setIsFirstStop(boolean isFirstStop) {
         this.isFirstStop = isFirstStop;
     }
+
+    public void setNewRte(){ this.isNewRte = true;};
+    public void setLastStopLastRte(int stop_id){this.lastStopLastRte = stop_id;}
+
 }

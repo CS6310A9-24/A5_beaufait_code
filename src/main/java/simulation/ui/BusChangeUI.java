@@ -111,6 +111,8 @@ public class BusChangeUI {
                 case "Route":
                     int newRouteID = Integer.parseInt(routeList.getSelectedItem().toString());
                     int newRteStopIndex = stopList.getSelectedIndex();
+                    Simulation.buses.get(bus_id).setLastStopLastRte(Simulation.buses.get(bus_id).getCurrentStop().getId());
+                    Simulation.buses.get(bus_id).setNewRte();
                     Simulation.addBusRouteChange(this.bus_id, newRouteID, newRteStopIndex);
                     break;
 
