@@ -1,9 +1,9 @@
 
 package simulation.ui;
 
-import main.java.simulation.Simulation;
+import simulation.Simulation;
 
-import main.java.simulation.*;
+import simulation.*;
 //import main.java.simulation.Simulation;
 
 import javax.swing.*;
@@ -100,12 +100,12 @@ public class BusChangeUI {
             switch (optionList.getSelectedItem().toString()){
                 case "Speed":
                     int newSpeed = Integer.parseInt(input.getText());
-                    Simulation.addBusChangeSpeed(this.bus_id, newSpeed);
+                    Simulation.addBusSpeedChange(this.bus_id, newSpeed);
                     break;
 
                 case "Capacity":
                     int newCapacity = Integer.parseInt(input.getText());
-                    Simulation.addBusChangeSpeed(this.bus_id, newCapacity);
+                    Simulation.addBusCapacityChange(this.bus_id, newCapacity);
                     break;
 
                 case "Route":
@@ -115,9 +115,7 @@ public class BusChangeUI {
                     break;
 
             }
-            //bus_changes.add(new BusChange(BusChange.ChangeType.SPEED, [bus_id], [new_bus_speed])); //when change speed is clicked
-            //bus_changes.add(new BusChange(BusChange.ChangeType.CAPACITY, [bus_id], [new_bus_capacity])); //when change capacity is clicked
-            //bus_changes.add(new BusChange(BusChange.ChanteType.ROUTE, [bus_id], [new_route_id], [new_stop_index])); //when change route is clicked
+
         }
     }
 }

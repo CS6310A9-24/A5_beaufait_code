@@ -1,7 +1,13 @@
 package simulation;
 
+import simulation.ui.BusChangeUI;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -79,10 +85,36 @@ public class StopBox extends JPanel {
         bus_info.setFont(new Font("Courier", Font.BOLD, 8));
         bus_info.setEditable(false);
         bus_info.setName(Integer.toString(bus_id));
+        bus_info.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                BusChangeUI bc = new BusChangeUI(bus_id);
+            }
 
-        System.out.println("Add " + bus_id + " to stop " + this.stopID + " with size " + busTextFields.size());
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
+
+        //System.out.println("Add " + bus_id + " to stop " + this.stopID + " with size " + busTextFields.size());
         busTextFields.put(bus_id, bus_info);
-        System.out.println("Added " + bus_id + " to stop " + this.stopID + " with size " + busTextFields.size());
+        //System.out.println("Added " + bus_id + " to stop " + this.stopID + " with size " + busTextFields.size());
         //set where it should be, should always at least start at gridy = 3
         c.gridy = 3 + busTextFields.size();
         c.gridx = 0;
@@ -93,8 +125,8 @@ public class StopBox extends JPanel {
 
     public void updateBusInfo(int bus_id) {
         int compID = 1000;
-        for(int i = 0; i < getComponentCount(); i++){
-            if(getComponent(i).getName().equals(Integer.toString(bus_id))){
+        for (int i = 0; i < getComponentCount(); i++) {
+            if (getComponent(i).getName().equals(Integer.toString(bus_id))) {
                 compID = i;
             }
         }

@@ -18,6 +18,7 @@ public class Simulation {
 
     public int event_index = -1;
     public Queue queue;
+    public static List routeIDs;
 
 
     private UserInterface ui;
@@ -26,12 +27,14 @@ public class Simulation {
 
         ui = new UserInterface(this);
         queue = new Queue(this);
+        routeIDs = new ArrayList();
     }
 
     public void setup(String[] args) {
 
         final String DELIMITER = ",";
-        String scenarioFile = args[0];
+        //String scenarioFile = args[0];
+        String scenarioFile = "resources/test_scenario.txt";
         // Step 1: Read the data from the provided scenario configuration file.
         try {
             Scanner takeCommand = new Scanner(new File(scenarioFile));
@@ -52,6 +55,7 @@ public class Simulation {
                         int route_index = Integer.parseInt(tokens[1]);
                         routes.put(route_index, new Route(Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]),
                                 tokens[3]));
+                        routeIDs.add((Integer.parseInt(tokens[1])));
                         break;
                     case "extend_route":
                         route_index = Integer.parseInt(tokens[1]);
@@ -84,8 +88,8 @@ public class Simulation {
 
         // Step 2: Read the data from the provided passenger probabilities file
         final String PASSENGER_PROBABILITY_DELIMITER = ",";
-        String probabilityFile = args[1];
-
+        //String probabilityFile = args[1];
+        String probabilityFile = "resources/test_evening_distibution.csv";
         try {
             Scanner takeCommand = new Scanner(new File(probabilityFile));
             String[] tokens;
@@ -328,4 +332,19 @@ public class Simulation {
     public void setUi(UserInterface ui) {
         this.ui = ui;
     }
+
+    public static List getRouteIDs(){return routeIDs;}
+
+    public static void addBusSpeedChange(int bus_id, int new_speed){
+        bus_changes.add(new BusSpeedChange(BusChange.ChangeType.SPEED, bus_id, new_speed)); //when change speed is clicked
+    }
+
+    public static void addBusCapacityChange(int bus_id, int new_capacity){
+        bus_changes.add(new BusCapacityChange(BusChange.ChangeType.CAPACITY, bus_id, new_capacity));
+    }
+
+    public static void addBusRouteChange(int bus_id, int rteID, int rteIndex){
+        bus_changes.add(new BusRouteChange(BusChange.ChangeType.ROUTE, bus_id, rteID, rteIndex));
+    }
+
 }
