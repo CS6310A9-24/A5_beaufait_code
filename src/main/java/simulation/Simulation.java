@@ -12,6 +12,7 @@ public class Simulation {
     public static Map<Integer, Stop> stops = new HashMap<>();
     public static Map<Integer, Route> routes = new HashMap<>();
     public static List<BusChange> bus_changes = new ArrayList<>();
+    public static Efficiency efficiency = new Efficiency();
 
     public int current_bus_processing, next_stop_id, next_time, next_passengers;
     public double next_distance;
@@ -85,7 +86,6 @@ public class Simulation {
         // Step 2: Read the data from the provided passenger probabilities file
         final String PASSENGER_PROBABILITY_DELIMITER = ",";
         String probabilityFile = args[1];
-
         try {
             Scanner takeCommand = new Scanner(new File(probabilityFile));
             String[] tokens;
@@ -170,6 +170,9 @@ public class Simulation {
         // Step 6: Update system state and generate new events as needed.
         ui.move_bus();
         queue.updateEventExecutionTimes(queue.currentEventId, next_time);
+        double efficiency_value = efficiency.system_efficiency();
+        String efficiency_value_txt = String.valueOf(efficiency_value);
+        ui.updateSystemEfficiency(efficiency_value_txt);
     }
 
     public static void passengerExchange(Bus bus, Stop stop) {
