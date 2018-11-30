@@ -159,7 +159,12 @@ public class Simulation {
         // Step 5: Do passenger exchange at this stop
         passengerExchange(bus, bus.getCurrentStop());
         // Step 3: Determine which stop the bus will travel to next (based on the current location and route)
-        next_stop_id = buses.get(current_bus_processing).getNextStop();
+        if (queue.replay_flag) {
+            int current_route_id = buses.get(current_bus_processing).getRouteId();
+            next_stop_id = routes.get(current_route_id).getStopIdByIndex(queue.rewindList.get(0).getStopIndex());
+        } else {
+            next_stop_id = buses.get(current_bus_processing).getNextStop();
+        }
         // Step 4: Calculate the distance and travel time between the current and next stops
         next_distance = buses.get(current_bus_processing).calculateDistance(next_stop_id);
         next_time = buses.get(current_bus_processing).calculateTravelTime(next_distance) +
