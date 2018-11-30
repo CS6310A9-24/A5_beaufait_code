@@ -54,7 +54,7 @@ public class UserInterface {
 
 
         JPanel system_efficiency = new JPanel();
-        system_efficiency_text = new JTextField("System Efficiency = 14.32");
+        system_efficiency_text = new JTextField("System Efficiency = 0.0");
         system_efficiency.add(system_efficiency_text);
 
         button_layout.add(move_bus_button);
