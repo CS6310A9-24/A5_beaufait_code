@@ -52,7 +52,7 @@ public class Stop {
     public void setStopDistributions(int ridersArriveHigh, int ridersArriveLow, int ridersOffHigh, int ridersOffLow,
                                      int ridersOnHigh, int ridersOnLow, int ridersDepartHigh, int ridersDepartLow) {
         if (ridersArriveLow < 0 || ridersOffLow < 0 || ridersOnLow < 0 || ridersDepartLow < 0 ||
-            ridersArriveHigh < ridersArriveLow || ridersOffHigh < ridersOffLow || ridersOnHigh < ridersOffLow || ridersDepartHigh < ridersDepartLow) {
+            ridersArriveHigh < ridersArriveLow || ridersOffHigh < ridersOffLow || ridersOnHigh < ridersOnLow || ridersDepartHigh < ridersDepartLow) {
             throw new RuntimeException("Can't have negative passenger probability parameters or samples");
         }
         this.ridersArriveHigh = ridersArriveHigh;
