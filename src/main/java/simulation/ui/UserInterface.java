@@ -67,6 +67,12 @@ public class UserInterface {
 
 
         JButton replay_button = new JButton("Rewind");
+        replay_button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                simulation.rewind();
+            }
+        });
 
         button_layout.add(move_bus_button);
         button_layout.add(replay_button);
@@ -143,6 +149,8 @@ public class UserInterface {
         String s = "b:" + current_bus_processing + "->s:" + next_stop_id + "@" + next_time + "//p:" + next_passengers + "/f:0";
 
 
+        System.out.println("current_stopID: " + current_stopID);
+        System.out.println("previous_stopID:" + previous_stopID);
         stop_boxes.get(current_stopID).add_busTextField(current_bus_processing, s);
         stop_boxes.get(current_stopID).show_buses();
 
