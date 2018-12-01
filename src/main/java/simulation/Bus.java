@@ -1,5 +1,8 @@
 package simulation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Bus {
     // Declare Bus attributes
     private int id;
@@ -24,6 +27,7 @@ public class Bus {
     private boolean isFirstStop;
     public boolean isNewRte;
     public int lastStopLastRte;
+    public List previousStops;
 
     // Bus Constructor
     public Bus(int bus_id, int route_id, int route_index, int initial_passengers, int max_capacity,
@@ -43,6 +47,9 @@ public class Bus {
         this.stopId = simulation.routes.get(this.routeId).getStopIdByIndex(this.routeIndex);
         this.previousRouteIndex = 0;
         this.isFirstStop = true;
+        this.previousStops = new ArrayList();
+
+        this.previousStops.add(this.stopId);
 
         // If client updates bus route and route index, those values will be reflected in these two attributes.
         // The reason for adding these two extra fields (a.o.t. overriding routeId and routeIndex) is that, for calculating distance and time from bus' current stop to next stop, Main looks at routeId and routeIndex to determine current stop.
@@ -82,23 +89,16 @@ public class Bus {
         this.routeIndex = index;
     }
 
-    public void setPrevRouteIndex(int index) {
-        this.previousRouteIndex = index;
-    }
-
-    public int getPreviousRouteIndex() {
-        if (isFirstStop == true) {
-            this.isFirstStop = false;
-            return this.routeIndex;
-        } else if (this.routeIndex == 0) {
-            this.routeIndex = simulation.routes.get(this.routeId).getListStopIds().size() - 1;
-            return this.routeIndex;
-        } else if(isNewRte == true){
-            isNewRte = false;
-            return lastStopLastRte;
-        } else {
-            return this.routeIndex - 1;
+    public int getPreviousStopID(){
+        int prevStopID = 0;
+        if(isFirstStop == true){
+            prevStopID = Simulation.routes.get(this.routeId).getStopIdByIndex(this.routeIndex);
+        }else {
+            prevStopID = (Integer) (this.previousStops.get(this.previousStops.size()-2));
         }
+
+        System.out.println("Previous Stop: " + prevStopID + " Bus: " + this.id);
+        return prevStopID;
     }
 
     public Stop getCurrentStop() {
@@ -293,7 +293,7 @@ public class Bus {
     }
 
     public boolean getIsFirstStop() {
-        return isFirstStop;
+        return this.isFirstStop;
     }
 
     public void setIsFirstStop(boolean isFirstStop) {

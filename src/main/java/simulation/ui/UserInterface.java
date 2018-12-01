@@ -107,7 +107,8 @@ public class UserInterface {
         int next_passengers = simulation.getNext_passengers();
 
         int current_stopID = simulation.getRoutes().get(simulation.getBuses().get(current_bus_processing).getRouteId()).getStopIdByIndex(simulation.getBuses().get(current_bus_processing).getRouteIndex());
-        int previous_stopID = simulation.getRoutes().get(simulation.getBuses().get(current_bus_processing).getRouteId()).getStopIdByIndex(simulation.getBuses().get(current_bus_processing).getPreviousRouteIndex());
+        //int previous_stopID = simulation.getRoutes().get(simulation.getBuses().get(current_bus_processing).getRouteId()).getStopIdByIndex(simulation.getBuses().get(current_bus_processing).getPreviousRouteIndex());
+        int previous_stopID = simulation.buses.get(current_bus_processing).getPreviousStopID();
         String s = "b:" + current_bus_processing + "->s:" + next_stop_id + "@" + next_time + "//p:" + next_passengers + "/f:0";
 
 
@@ -115,9 +116,13 @@ public class UserInterface {
         stop_boxes.get(current_stopID).show_buses();
 
         //run logic for previous stop
-        if (current_stopID != previous_stopID) {
+        System.out.println(simulation.buses.get(current_bus_processing).getIsFirstStop());
+        if (simulation.buses.get(current_bus_processing).getIsFirstStop() == false) {
+            System.out.println("In this shit");
             stop_boxes.get(previous_stopID).updateBusInfo(current_bus_processing);
         }
+
+        simulation.buses.get(current_bus_processing).setIsFirstStop(false);
 
         stop_boxes.get(previous_stopID).show_buses();
 
