@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,13 +17,27 @@ public class UserInterface {
     public JFrame main_simulation_frame = new JFrame("MTS Simulation Control");
     public static JPanel world_layout = new JPanel();
     public static JPanel button_layout = new JPanel();
-    public JPanel status_layout = new JPanel();
+    public JPanel status_layout = new JPanel(new GridLayout(2, 5, 2, 2));
     public static Map<Integer, StopBox> stop_boxes = new HashMap<>();
 
     private int APP_WIDTH = 1200;
     private int APP_HEIGHT = 900;
-    private JTextField system_efficiency_text;
+    private JTextField system_efficiency_text= new JTextField();
     private Simulation simulation;
+
+    JTextField k_speed_text = new JTextField("1.0");
+    JButton k_speed_button = new JButton("Update Speed");
+    JTextField k_capacity_text = new JTextField("1.0");
+    JButton k_capacity_button = new JButton("Update Capacity");
+    JTextField k_waiting_text = new JTextField("1.0");
+    JButton k_waiting_button = new JButton("Update Waiting");
+    JTextField k_buses_text = new JTextField("1.0");
+    JButton k_buses_button = new JButton("Update Buses");
+    JTextField k_combined_text = new JTextField("1.0");
+    JButton k_combined_button = new JButton("Update Combined");
+    JButton efficiency_button = new JButton("Refresh efficiency");
+
+    JPanel constantPanel = new JPanel(new GridLayout(2, 6, 2, 2));
 
     public UserInterface(Simulation simulation) {
         this.simulation = simulation;
@@ -52,16 +68,31 @@ public class UserInterface {
 
         JButton replay_button = new JButton("Rewind");
 
-
-        JPanel system_efficiency = new JPanel();
-        system_efficiency_text = new JTextField("System Efficiency = 14.32");
-        system_efficiency.add(system_efficiency_text);
-
         button_layout.add(move_bus_button);
         button_layout.add(replay_button);
-        status_layout.add(system_efficiency);
 
 
+        //System efficiency section and constants
+        status_layout.add(k_speed_text);
+        status_layout.add(k_capacity_text);
+        status_layout.add(k_waiting_text);
+        status_layout.add(k_buses_text);
+        status_layout.add(k_combined_text);
+        status_layout.add(system_efficiency_text);
+
+        status_layout.add(k_speed_button);
+        status_layout.add(k_capacity_button);
+        status_layout.add(k_waiting_button);
+        status_layout.add(k_buses_button);
+        status_layout.add(k_combined_button);
+        status_layout.add(efficiency_button);
+        system_efficiency_text.setEditable(false);
+        system_efficiency_text.setText("System Efficiency");
+
+
+        setupListenersForButtons();
+
+        //main frame section
         main_simulation_frame.validate();
         main_simulation_frame.pack();
         main_simulation_frame.setVisible(true);
@@ -133,8 +164,172 @@ public class UserInterface {
     }
 
     public void updateSystemEfficiency(String text) {
-        system_efficiency_text.setText("System Efficiency = " + text);
+        system_efficiency_text.setText(text);
     }
 
 
+    private void setupListenersForButtons() {
+        final String INVALID_VALUE = "Invalid Value!!";
+
+        k_buses_button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                try {
+                    simulation.efficiency.setConstsBuses(Double.parseDouble(k_buses_text.getText()));
+                    k_buses_button.setText("Saved Buses");
+                } catch (NumberFormatException nfe) {
+                    System.out.println("Invalid value for Bus constant");
+                    k_buses_text.setText(INVALID_VALUE);
+                }
+            }
+        });
+
+        k_buses_text.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                k_buses_button.setText("Update Buses");
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+
+            }
+        });
+
+
+        k_speed_button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                try {
+                    simulation.efficiency.setConstsSpeed(Double.parseDouble(k_speed_text.getText()));
+                    k_speed_button.setText("Saved Speed");
+
+                } catch (NumberFormatException nfe) {
+                    System.out.println("Invalid value for Speed constant");
+                    k_speed_text.setText(INVALID_VALUE);
+                }
+            }
+        });
+        k_speed_text.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                k_speed_button.setText("Update Speed");
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+
+            }
+        });
+
+        k_capacity_button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                try {
+                    simulation.efficiency.setConstsCapacity(Double.parseDouble(k_capacity_text.getText()));
+                    k_capacity_button.setText("Saved Capacity");
+
+                } catch (NumberFormatException nfe) {
+                    System.out.println("Invalid value for Capacity constant");
+                    k_capacity_text.setText(INVALID_VALUE);
+                }
+            }
+        });
+
+        k_capacity_text.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                k_capacity_button.setText("Update Capacity");
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+
+            }
+        });
+
+
+        k_waiting_button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                try {
+                    simulation.efficiency.setConstsWaiting(Double.parseDouble(k_waiting_text.getText()));
+                    k_waiting_button.setText("Saved Waiting");
+                } catch (NumberFormatException nfe) {
+                    System.out.println("Invalid value for waiting constant");
+                    k_waiting_text.setText(INVALID_VALUE);
+                }
+            }
+        });
+        k_waiting_text.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                k_waiting_button.setText("Update Waiting");
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+
+            }
+        });
+
+        k_combined_button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                try {
+                    simulation.efficiency.setConstsCombined(Double.parseDouble(k_combined_text.getText()));
+                    k_combined_button.setText("Saved Combined");
+
+                } catch (NumberFormatException nfe) {
+                    System.out.println("Invalid value for Combined constant");
+                    k_combined_button.setText(INVALID_VALUE);
+                }
+            }
+        });
+        k_combined_text.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                k_combined_button.setText("Update Combined");
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+
+            }
+        });
+
+
+        efficiency_button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                updateSystemEfficiency(simulation.efficiency.system_efficiency() + "");
+            }
+        });
+
+    }
 }
