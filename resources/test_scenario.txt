@@ -33,5 +33,10 @@ extend_route,55,4
 extend_route,55,10
 extend_route,55,9
 add_bus,60,51,0,0,15,100,300,20
+add_bus,61,51,3,0,15,100,300,40
+add_bus,63,55,0,0,15,100,300,20
+add_bus,64,55,4,0,15,100,300,40
 add_event,0,move_bus,60
-
+add_event,0,move_bus,61
+add_event,0,move_bus,63
+add_event,0,move_bus,64
