@@ -51,7 +51,13 @@ public class UserInterface {
 
 
         JButton replay_button = new JButton("Rewind");
-
+        replay_button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                simulation.queue.replay_flagOn();
+                simulation.execute_next();
+            }
+        });
 
         JPanel system_efficiency = new JPanel();
         system_efficiency_text = new JTextField("System Efficiency = 0.0");

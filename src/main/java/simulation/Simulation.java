@@ -161,7 +161,8 @@ public class Simulation {
         // Step 3: Determine which stop the bus will travel to next (based on the current location and route)
         if (queue.replay_flag) {
             int current_route_id = buses.get(current_bus_processing).getRouteId();
-            next_stop_id = routes.get(current_route_id).getStopIdByIndex(queue.rewindList.get(0).getStopIndex());
+            int next_stop_index = queue.rewindList.get(0).getStopIndex();
+            next_stop_id = routes.get(current_route_id).getStopIdByIndex(next_stop_index);
         } else {
             next_stop_id = buses.get(current_bus_processing).getNextStop();
         }

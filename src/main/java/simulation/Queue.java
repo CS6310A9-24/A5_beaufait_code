@@ -8,7 +8,6 @@ public class Queue {
     public ArrayList<RewindEvnt> rewindList;
     public int currentEventId;
     public Simulation simulation;
-    public int numRewindEvents = 0;
     public boolean replay_flag = false;
 
     // Queue Constructor
@@ -20,21 +19,21 @@ public class Queue {
     }
 
     // Queue Methods
+    public void replay_flagOn() {
+        this.replay_flag = true;
+    }
     public void addEventToPool(int eventIndex, int eventRank, String eventType, int objectId) {
         this.listEvents.add(eventIndex, new Event(eventIndex, eventRank, eventType, objectId));
     }
-    public void addRewindEvnt(int id, int busId, int rank, String type, int stopIndex, int numPassengersArrive,
-                              int numPassengersDepart, int numPassengersOn, int numPassengersOff){
+    public void addRewindEvnt(int id, int busId, int rank, String type, int stopIndex){
         if (this.rewindList.size() <= 2) {
             int index = 0;
-            this.rewindList.add(index, new RewindEvnt(id, busId, rank, type, stopIndex, numPassengersArrive, numPassengersDepart,
-                    numPassengersOn, numPassengersOff));
+            this.rewindList.add(index, new RewindEvnt(id, busId, rank, type, stopIndex));
         } else if (this.rewindList.size() == 3) {
             int index = 2;
             this.rewindList.remove(index);
             index = 0;
-            this.rewindList.add(index, new RewindEvnt(id, busId, rank, type, stopIndex, numPassengersArrive, numPassengersDepart,
-                    numPassengersOn, numPassengersOff));
+            this.rewindList.add(index, new RewindEvnt(id, busId, rank, type, stopIndex));
         }
         return;
     }
@@ -102,20 +101,15 @@ public class Queue {
             bus.setRouteIndex(bus.getNewRouteIndex());
         }
         String type = this.listEvents.get(eventIndex).getType();
-        int numPassengersArrive = 0;
-        int numPassengersDepart = 0;
-        int numPassengersOn = 0;
-        int numPassengersOff = 0;
         if (!replay_flag) {
-            addRewindEvnt(eventIndex, bus_id, old_rank, type, stop_index, numPassengersArrive, numPassengersDepart, numPassengersOn,
-                    numPassengersOff);
+            addRewindEvnt(eventIndex, bus_id, old_rank, type, stop_index);
         } else {
-            numRewindEvents = numRewindEvents - 1;
+            //numRewindEvents = numRewindEvents - 1;
             int ind = 0;
             this.rewindList.remove(ind);
-            if (numRewindEvents == 0) {
-                replay_flag = false;
-            }
+            //if (numRewindEvents == 0) {
+            replay_flag = false;
+            //}
         }
         //DEBUG
         for(int i = 0; i < this.rewindList.size(); i++) {
