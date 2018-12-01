@@ -210,10 +210,6 @@ public class Bus {
         this.numPassengersLoading = numPassengersLoading;
     }
 
-    public void setMaxCapacity(int maxCapacity) {
-        this.maxCapacity = maxCapacity;
-    }
-
     public void setAvgSpeed(double avgSpeed) {
         this.avgSpeed = avgSpeed;
     }

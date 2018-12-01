@@ -121,7 +121,7 @@ public class Simulation {
     // pre:: bus_id is the id of the current moving bus
     // each bus change is stored in a unique BusChange object
     // post:: applies the change to the current moving bus and deletes all the BusChange objects so that no change is applied more than once
-    public static void evaluateChanges(int bus_id) {
+    public void evaluateChanges(int bus_id) {
         for (BusChange change : bus_changes) {
             if (change.getBus_id() == bus_id) {
                 BusChange.ChangeType type = change.getChangeType();
@@ -137,6 +137,9 @@ public class Simulation {
                     case ROUTE:
                         BusRouteChange routeChange = (BusRouteChange) change;
                         buses.get(bus_id).changeRoute(routeChange.getNewRouteId(), routeChange.getNewRouteIndex());
+                        // DO NOT ALLOW THE CLIENT TO REQUEST REPLAY AFTER A BUS ROUTE CHANGE
+                        queue.replay_flag = false;
+                        queue.rewindList.clear();
                         break;
                 }
             }
@@ -149,22 +152,53 @@ public class Simulation {
         }
     }
 
+    public void create_rewind_event(int eventIndex) {
+        int bus_id = queue.listEvents.get(eventIndex).getBusId();
+        int old_rank = queue.listEvents.get(eventIndex).getRank();
+        String type = queue.listEvents.get(eventIndex).getType();
+        int stop_index = buses.get(bus_id).getRouteIndex();
+        int route_id = buses.get(bus_id).getRouteId();
+        int stop_id = routes.get(route_id).getStopIdByIndex(stop_index);
+        Bus bus = buses.get(bus_id);
+        Stop stop = stops.get(stop_id);
+        queue.addRewindEvnt(eventIndex, bus_id, old_rank, type, stop_index, stop.getNumPassengersWaiting(), bus.getNumPassengersRiding(), bus.getMaxCapacity(),
+                bus.getAvgSpeed());
+
+        // Set to true so that rewind() can now be requested by the client
+        queue.replay_flag = true;
+    }
+
+    public void updateBusStop(Bus bus) {
+        if (bus.getRouteId() == bus.getNewRouteId()) { //client has not changed route since last move_bus event was processed
+            // make routeIndex and newRouteIndex equal to the index of the next stop on the current route
+            if ((bus.getRouteIndex() + 1) >= routes.get(bus.getRouteId()).getListStopIds().size()) {
+                bus.setRouteIndex(0);
+                bus.setNewRouteIndex(0);
+            } else {
+                bus.setRouteIndex((bus.getRouteIndex() + 1));
+                bus.setNewRouteIndex((bus.getRouteIndex() + 1));
+            }
+        } else { //client has changed route since last move_bus event was processed
+            // set the bus route and stop index to be newRouteId and newRouteIndex, respectively
+            bus.setRouteId(bus.getNewRouteId());
+            bus.setRouteIndex(bus.getNewRouteIndex());
+        }
+    }
     public void execute_next(){
         queue.chooseNextEvent();
         current_bus_processing = queue.listEvents.get(queue.currentEventId).getBusId();
         Bus bus = buses.get(current_bus_processing);
+
+        // Store the original state of the bus in the rewind list
+        create_rewind_event(queue.currentEventId);
 
         // Step 4: update bus changes (if any)
         evaluateChanges(current_bus_processing);
         // Step 5: Do passenger exchange at this stop
         passengerExchange(bus, bus.getCurrentStop());
         // Step 3: Determine which stop the bus will travel to next (based on the current location and route)
-        if (queue.replay_flag) {
-            int current_route_id = buses.get(current_bus_processing).getRouteId();
-            next_stop_id = routes.get(current_route_id).getStopIdByIndex(queue.rewindList.get(0).getStopIndex());
-        } else {
-            next_stop_id = buses.get(current_bus_processing).getNextStop();
-        }
+        next_stop_id = buses.get(current_bus_processing).getNextStop();
+
         // Step 4: Calculate the distance and travel time between the current and next stops
         next_distance = buses.get(current_bus_processing).calculateDistance(next_stop_id);
         next_time = buses.get(current_bus_processing).calculateTravelTime(next_distance) +
@@ -172,6 +206,10 @@ public class Simulation {
         // Step 5: Display the output line of text to the display
         next_passengers = buses.get(current_bus_processing).getNumPassengersRiding();
         System.out.println("b:"+current_bus_processing +"->s:"+next_stop_id+"@"+next_time+"//p:"+next_passengers+"/f:0");
+
+        // Update the bus route index
+        updateBusStop(bus);
+
         // Step 6: Update system state and generate new events as needed.
         ui.move_bus();
         queue.updateEventExecutionTimes(queue.currentEventId, next_time);
@@ -180,7 +218,55 @@ public class Simulation {
         ui.updateSystemEfficiency(efficiency_value_txt);
     }
 
-    public static void passengerExchange(Bus bus, Stop stop) {
+    // pre: bus route has not changed
+    public void rewind() {
+        if (!queue.replay_flag) {
+            System.out.println("Cannot rewind: either you (1) changed the route, (2) tried to rewind more than the number of times you moved buses OR (2) you tried to rewind more than three consecutive times");
+            return;
+        }
+        queue.choosePreviousEvent(); //restore old time
+        RewindEvnt rewindEvnt = queue.rewindList.get(0);
+        current_bus_processing = rewindEvnt.getBusId();
+        Bus bus = buses.get(current_bus_processing);
+        Stop stop = bus.getCurrentStop();
+
+        // restore the historic state of the bus and stop
+        // undo evaluateChanges
+        bus.setAvgSpeed(rewindEvnt.getOldSpeed());
+        bus.setCapacity(rewindEvnt.getOldCapacity());
+
+        //undo passengerExchange
+        bus.setNumPassengersRiding(rewindEvnt.getOldNumPassengersOnBus());
+        stop.setNumPassengersWaiting(rewindEvnt.getOldNumPassengersAtStation());
+
+        // restore previous bus stop
+        bus.setRouteIndex(rewindEvnt.getStopIndex());
+
+        //restore the old class attributes so that ui.move_bus() updates the UI to match previous state
+        next_stop_id = routes.get(bus.getRouteId()).getStopIdByIndex(rewindEvnt.getStopIndex());
+        next_time = rewindEvnt.getRank();
+        next_passengers = buses.get(current_bus_processing).getNumPassengersRiding();
+
+        // Step 5: Display the output line of text to the display
+        System.out.println("b:"+current_bus_processing +"->s:"+next_stop_id+"@"+next_time+"//p:"+next_passengers+"/f:0");
+
+        // Step 6: Update system state and generate new events as needed.
+        ui.move_bus();
+        // event's time was already restored to previous event time in call to choosePreviousEvent()
+        double efficiency_value = efficiency.system_efficiency();
+        String efficiency_value_txt = String.valueOf(efficiency_value);
+        ui.updateSystemEfficiency(efficiency_value_txt);
+
+
+        // remove the just applied RewindEvnt object from the rewind list
+        int ind = 0;
+        queue.rewindList.remove(ind);
+        if (queue.rewindList.isEmpty()) {
+            queue.replay_flag = false;
+        }
+    }
+
+    public void passengerExchange(Bus bus, Stop stop) {
         int numPassengersWaiting = stop.getNumPassengersWaiting();
         System.out.println("numPassengersWaiting at station: " + numPassengersWaiting);
 
