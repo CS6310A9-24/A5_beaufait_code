@@ -15,18 +15,14 @@ public class StopBox extends JPanel {
 
     public static ImageIcon stop_icon = new ImageIcon("resources/images/bus_stop_img.png");
     public static ImageIcon bus_icon = new ImageIcon("resources/images/bus_img.png");
-
     private GridBagConstraints c = new GridBagConstraints();
     private JTextField bus_stop_info = new JTextField();
     private JLabel bus_stop_img = new JLabel(stop_icon);
     private JLabel bus_img = new JLabel(bus_icon);
     private JTextField pax_info = new JTextField();
-
     private Map<Integer, JTextField> busTextFields = new HashMap<>();//integer is the bus_id
-
     private String name;
     private int stopID;
-
 
     public StopBox(int stopID, String name) {
         this.stopID = stopID;
@@ -76,7 +72,6 @@ public class StopBox extends JPanel {
 
         setVisible(true);
         resize_box();
-
     }
 
     public void add_busTextField(int bus_id, String s) {
@@ -90,31 +85,21 @@ public class StopBox extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 BusChangeUI bc = new BusChangeUI(bus_id);
             }
-
             @Override
             public void mousePressed(MouseEvent e) {
-
             }
-
             @Override
             public void mouseReleased(MouseEvent e) {
-
             }
-
             @Override
             public void mouseEntered(MouseEvent e) {
-
             }
-
             @Override
             public void mouseExited(MouseEvent e) {
-
             }
         });
 
-        //System.out.println("Add " + bus_id + " to stop " + this.stopID + " with size " + busTextFields.size());
         busTextFields.put(bus_id, bus_info);
-        //System.out.println("Added " + bus_id + " to stop " + this.stopID + " with size " + busTextFields.size());
         //set where it should be, should always at least start at gridy = 3
         c.gridy = 3 + busTextFields.size();
         c.gridx = 0;
@@ -132,9 +117,7 @@ public class StopBox extends JPanel {
         }
 
         remove(compID);
-//        System.out.println("Rem " + bus_id + " from stop " + this.stopID + " with size " + busTextFields.size());
         busTextFields.remove(bus_id);
-//        System.out.println("Removed " + bus_id + " from stop " + this.stopID + " with size " + busTextFields.size());
         resize_box();
     }
 
@@ -144,7 +127,6 @@ public class StopBox extends JPanel {
         } else {
             this.bus_img.setVisible(false);
         }
-
         resize_box();
     }
 

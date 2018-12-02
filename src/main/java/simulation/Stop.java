@@ -13,13 +13,11 @@ public class Stop {
     private int ridersOnHigh;
     private int ridersDepartLow;
     private int ridersDepartHigh;
-
     private String name;
     private int numPassengersWaiting;
     private int numNewPassengerArrivals;
     private int numPassengerDepartures;
     private Location location;
-
     private static Random random = new Random(); //let all Stop classes share this one Random object
 
     // Stop Constructor
@@ -65,106 +63,19 @@ public class Stop {
         this.ridersDepartLow = ridersDepartLow;
     }
 
-    public int getRidersArriveLow() {
-        return ridersArriveLow;
-    }
-
-    public void setRidersArriveLow(int ridersArriveLow) {
-        this.ridersArriveLow = ridersArriveLow;
-    }
-
-    public int getRidersArriveHigh() {
-        return ridersArriveHigh;
-    }
-
-    public void setRidersArriveHigh(int ridersArriveHigh) {
-        this.ridersArriveHigh = ridersArriveHigh;
-    }
-
-    public int getRidersOffLow() {
-        return ridersOffLow;
-    }
-
-    public void setRidersOffLow(int ridersOffLow) {
-        this.ridersOffLow = ridersOffLow;
-    }
-
-    public int getRidersOffHigh() {
-        return ridersOffHigh;
-    }
-
-    public void setRidersOffHigh(int ridersOffHigh) {
-        this.ridersOffHigh = ridersOffHigh;
-    }
-
-    public int getRidersOnLow() {
-        return ridersOnLow;
-    }
-
-    public void setRidersOnLow(int ridersOnLow) {
-        this.ridersOnLow = ridersOnLow;
-    }
-
-    public int getRidersOnHigh() {
-        return ridersOnHigh;
-    }
-
-    public void setRidersOnHigh(int ridersOnHigh) {
-        this.ridersOnHigh = ridersOnHigh;
-    }
-
-    public int getRidersDepartLow() {
-        return ridersDepartLow;
-    }
-
-    public void setRidersDepartLow(int ridersDepartLow) {
-        this.ridersDepartLow = ridersDepartLow;
-    }
-
-    public int getRidersDepartHigh() {
-        return ridersDepartHigh;
-    }
-
-    public void setRidersDepartHigh(int ridersDepartHigh) {
-        this.ridersDepartHigh = ridersDepartHigh;
-    }
-
     public void setNumPassengersWaiting(int numPassengersWaiting) {
         this.numPassengersWaiting = numPassengersWaiting;
-    }
-
-    public int getNumNewPassengerArrivals() {
-        return numNewPassengerArrivals;
-    }
-
-    public void setNumNewPassengerArrivals(int numNewPassengerArrivals) {
-        this.numNewPassengerArrivals = numNewPassengerArrivals;
-    }
-
-    public int getNumPassengerDepartures() {
-        return numPassengerDepartures;
-    }
-
-    public void setNumPassengerDepartures(int numPassengerDepartures) {
-        this.numPassengerDepartures = numPassengerDepartures;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
     }
 
     public int newPassengersArrive() {
         return random.nextInt((this.ridersArriveHigh - this.ridersArriveLow) + 1) + this.ridersArriveLow;
     }
-
     public int unloadPassengersfromBus() {
         return random.nextInt((this.ridersOffHigh - this.ridersOffLow) + 1) + this.ridersOffLow;
     }
-
     public int loadPassengersfromStop() {
         return random.nextInt( (this.ridersOnHigh - this.ridersOnLow) + 1) + this.ridersOnLow;
     }
-
     public int passengersDepartStop() {
         return random.nextInt( (this.ridersDepartHigh - this.ridersDepartLow) + 1) + this.ridersDepartLow;
     }

@@ -20,8 +20,6 @@ public class Simulation {
     public int event_index = -1;
     public Queue queue;
     public static List routeIDs;
-    private int prevRewEvntTime = 0;
-
 
     private UserInterface ui;
 
@@ -35,8 +33,7 @@ public class Simulation {
     public void setup(String[] args) {
 
         final String DELIMITER = ",";
-//        String scenarioFile = args[0];
-        String scenarioFile = "resources/test_scenario.txt";
+        String scenarioFile = args[0];
         // Step 1: Read the data from the provided scenario configuration file.
         try {
             Scanner takeCommand = new Scanner(new File(scenarioFile));
@@ -67,8 +64,7 @@ public class Simulation {
                         int bus_index = Integer.parseInt(tokens[1]);
                         buses.put(bus_index, new Bus(Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]),
                                 Integer.parseInt(tokens[3]), Integer.parseInt(tokens[4]),
-                                Integer.parseInt(tokens[5]), Integer.parseInt(tokens[6]),
-                                Integer.parseInt(tokens[7]), Double.parseDouble(tokens[8])));
+                                Integer.parseInt(tokens[5])));
                         ui.add_bus_GUI(bus_index);
                         break;
                     case "add_event":
@@ -90,8 +86,7 @@ public class Simulation {
 
         // Step 2: Read the data from the provided passenger probabilities file
         final String PASSENGER_PROBABILITY_DELIMITER = ",";
-//        String probabilityFile = args[1];
-        String probabilityFile = "resources/test_evening_distibution.csv";
+        String probabilityFile = args[1];
         try {
             Scanner takeCommand = new Scanner(new File(probabilityFile));
             String[] tokens;
@@ -195,26 +190,22 @@ public class Simulation {
         ui.currEventTime_text.setText("" + queue.listEvents.get(queue.currentEventId).getRank());
         current_bus_processing = queue.listEvents.get(queue.currentEventId).getBusId();
         Bus bus = buses.get(current_bus_processing);
-
         // Store the original state of the bus in the rewind list
         create_rewind_event(queue.currentEventId);
-
-        // Step 4: update bus changes (if any)
+        // update bus changes (if any)
         evaluateChanges(current_bus_processing);
-        // Step 5: Do passenger exchange at this stop
+        // Do passenger exchange at this stop
         passengerExchange(bus, bus.getCurrentStop());
-        // Step 3: Determine which stop the bus will travel to next (based on the current location and route)
+        // Determine which stop the bus will travel to next (based on the current location and route)
         next_stop_id = buses.get(current_bus_processing).getNextStop();
-
-        // Step 4: Calculate the distance and travel time between the current and next stops
+        // Calculate the distance and travel time between the current and next stops
         next_distance = buses.get(current_bus_processing).calculateDistance(next_stop_id);
         next_time = buses.get(current_bus_processing).calculateTravelTime(next_distance) +
                 queue.listEvents.get(queue.currentEventId).getRank();
-        // Step 5: Display the output line of text to the display
+        // Display the output line of text to the display
         next_passengers = buses.get(current_bus_processing).getNumPassengersRiding();
         System.out.println("b:"+current_bus_processing +"->s:"+next_stop_id+"@"+next_time+"//p:"+next_passengers+"/f:0");
-
-        // Step 6: Update system state and generate new events as needed.
+        // Update system state and generate new events as needed.
         ui.move_bus();
         queue.updateEventExecutionTimes(queue.currentEventId, next_time);
         // Update the bus route index
@@ -223,7 +214,6 @@ public class Simulation {
         String efficiency_value_txt = String.valueOf(efficiency_value);
         ui.updateSystemEfficiency(efficiency_value_txt);
         buses.get(current_bus_processing).previousStops.add(buses.get(current_bus_processing).getCurrentStop().getId());
-        //System.out.println("Adding " + buses.get(current_bus_processing).getCurrentStop().getId());
     }
 
     // pre: bus route has not changed
@@ -269,7 +259,6 @@ public class Simulation {
         // remove the just applied RewindEvnt object from the rewind list
         int ind = 0;
         System.out.println("number of rewinds before deletion" + queue.rewindList.size());
-//        ui.currEventTime_text.setText("" + queue.rewindList.get(0).getRank());
         queue.rewindList.remove(ind);
         System.out.println("number of rewinds after deletion" + queue.rewindList.size());
         if (queue.rewindList.isEmpty()) {
@@ -359,88 +348,28 @@ public class Simulation {
         return buses;
     }
 
-    public static void setBuses(Map<Integer, Bus> buses) {
-        Simulation.buses = buses;
-    }
-
     public static Map<Integer, Stop> getStops() {
         return stops;
-    }
-
-    public static void setStops(Map<Integer, Stop> stops) {
-        Simulation.stops = stops;
     }
 
     public static Map<Integer, Route> getRoutes() {
         return routes;
     }
 
-    public static void setRoutes(Map<Integer, Route> routes) {
-        Simulation.routes = routes;
-    }
-
     public int getCurrent_bus_processing() {
         return current_bus_processing;
-    }
-
-    public void setCurrent_bus_processing(int current_bus_processing) {
-        this.current_bus_processing = current_bus_processing;
     }
 
     public int getNext_stop_id() {
         return next_stop_id;
     }
 
-    public void setNext_stop_id(int next_stop_id) {
-        this.next_stop_id = next_stop_id;
-    }
-
     public int getNext_time() {
         return next_time;
     }
 
-    public void setNext_time(int next_time) {
-        this.next_time = next_time;
-    }
-
     public int getNext_passengers() {
         return next_passengers;
-    }
-
-    public void setNext_passengers(int next_passengers) {
-        this.next_passengers = next_passengers;
-    }
-
-    public double getNext_distance() {
-        return next_distance;
-    }
-
-    public void setNext_distance(double next_distance) {
-        this.next_distance = next_distance;
-    }
-
-    public int getEvent_index() {
-        return event_index;
-    }
-
-    public void setEvent_index(int event_index) {
-        this.event_index = event_index;
-    }
-
-    public Queue getQueue() {
-        return queue;
-    }
-
-    public void setQueue(Queue queue) {
-        this.queue = queue;
-    }
-
-    public UserInterface getUi() {
-        return ui;
-    }
-
-    public void setUi(UserInterface ui) {
-        this.ui = ui;
     }
 
     public static List getRouteIDs(){return routeIDs;}

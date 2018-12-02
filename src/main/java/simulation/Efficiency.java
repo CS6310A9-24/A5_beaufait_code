@@ -45,7 +45,6 @@ public class Efficiency {
         for (Map.Entry<Integer, Stop> stopEntry: Simulation.stops.entrySet()){
             num_passengers = Simulation.stops.get(stopEntry.getKey()).getNumPassengersWaiting();
             total_passengers += num_passengers;
-//            System.out.println("num waiting" + num_passengers + "total" + total_passengers);
         }
         return total_passengers;
     }
@@ -56,7 +55,6 @@ public class Efficiency {
             cost = consts_speed *(Simulation.buses.get(busEntry.getKey()).getAvgSpeed()) +
                     consts_capacity * (Simulation.buses.get(busEntry.getKey()).getMaxCapacity());
             total_cost += cost;
-//            System.out.println(total_cost);
         }
         return total_cost;
     }

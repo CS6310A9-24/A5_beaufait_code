@@ -35,19 +35,15 @@ public class RewindEvnt {
     public int getRank() {
         return this.rank;
     }
-
     public int getOldNumPassengersAtStation() {
         return oldNumPassengersAtStation;
     }
-
     public int getOldNumPassengersOnBus() {
         return oldNumPassengersOnBus;
     }
-
     public int getOldCapacity() {
         return oldCapacity;
     }
-
     public double getOldSpeed() {
         return oldSpeed;
     }

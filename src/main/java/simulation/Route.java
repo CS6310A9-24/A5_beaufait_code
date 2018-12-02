@@ -1,9 +1,6 @@
 package simulation;
-
 import java.util.ArrayList;
 import java.util.List;
-
-
 
 public class Route {
     // Declare Route attributes
@@ -20,15 +17,6 @@ public class Route {
         this.listStopIds = new ArrayList<>();
     }
     // Access methods
-    public int getId() {
-        return id;
-    }
-    public int getNumber() {
-        return number;
-    }
-    public String getName() {
-        return name;
-    }
     public List<Integer> getListStopIds() {
         return listStopIds;
     }

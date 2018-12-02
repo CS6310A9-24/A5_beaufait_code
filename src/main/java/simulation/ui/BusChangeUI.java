@@ -17,7 +17,6 @@ public class BusChangeUI {
     public BusChangeUI(int bus_id) {
         this.bus_id = bus_id;
         //SPEED, ROUTE, CAPACITY
-        //String[] changeOptions = { " ", "Speed", "Route", "Capacity"};
         JComboBox optionList = new JComboBox();
         JComboBox routeList = new JComboBox();
         JComboBox stopList = new JComboBox();
@@ -26,14 +25,8 @@ public class BusChangeUI {
         optionList.addItem("Route");
         optionList.addItem("Capacity");
         optionList.setSelectedIndex(0);
-
-        String selection = "";
-
         routeList.setVisible(false);
         stopList.setVisible(false);
-
-        //JTextField speedChange = new JTextField();
-
 
         JPanel p = new JPanel();
         p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
@@ -41,15 +34,11 @@ public class BusChangeUI {
         JTextField capacityInput = new JTextField();
         speedInput.setVisible(false);
         capacityInput.setVisible(false);
-
-
         optionList.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 event.getSource();
-
                 Object selected = optionList.getSelectedItem();
                 if(selected.toString().equals("Speed")) {
-                    //System.out.println("Speed");
                     speedInput.setVisible(true);
                     routeList.setVisible(false);
                     stopList.setVisible(false);
@@ -58,7 +47,6 @@ public class BusChangeUI {
                     p.repaint();
                 }
                 if(selected.toString().equals("Route")) {
-                    //System.out.println("Route");
                     speedInput.setVisible(false);
                     capacityInput.setVisible(false);
                     routeList.addItem("");
@@ -66,12 +54,10 @@ public class BusChangeUI {
                         routeList.addItem(Simulation.routeIDs.get(i));
                     }
                     routeList.setVisible(true);
-
                     routeList.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             e.getSource();
-
                             Object routeSelection = routeList.getSelectedItem();
                             stopList.removeAllItems();
                             for(int i = 0; i < Simulation.getRoutes().get(routeSelection).getListStopIds().size(); i++){
@@ -82,7 +68,6 @@ public class BusChangeUI {
                     stopList.setVisible(true);
                 }
                 if(selected.toString().equals("Capacity")) {
-                    //System.out.println("Capacity");
                     capacityInput.setVisible(true);
                     speedInput.setVisible(false);
                     routeList.setVisible(false);
@@ -100,23 +85,16 @@ public class BusChangeUI {
         p.add(capacityInput);
 
         int result = JOptionPane.showConfirmDialog(null, p,"Change bus # " + this.bus_id, JOptionPane.OK_CANCEL_OPTION);
-        //int value = Integer.parseInt(input.getText());
-        //System.out.println(value);
-
         if (result == JOptionPane.OK_OPTION) {
-//            System.out.println(optionList.getSelectedItem());
-
             switch (optionList.getSelectedItem().toString()){
                 case "Speed":
                     int newSpeed = Integer.parseInt(speedInput.getText());
                     Simulation.addBusSpeedChange(this.bus_id, newSpeed);
                     break;
-
                 case "Capacity":
                     int newCapacity = Integer.parseInt(capacityInput.getText());
                     Simulation.addBusCapacityChange(this.bus_id, newCapacity);
                     break;
-
                 case "Route":
                     int newRouteID = Integer.parseInt(routeList.getSelectedItem().toString());
                     int newRteStopIndex = stopList.getSelectedIndex();
@@ -124,9 +102,7 @@ public class BusChangeUI {
                     Simulation.buses.get(bus_id).setNewRte();
                     Simulation.addBusRouteChange(this.bus_id, newRouteID, newRteStopIndex);
                     break;
-
             }
-
         }
     }
 }

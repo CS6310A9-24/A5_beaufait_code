@@ -88,7 +88,6 @@ public class Queue {
             int this_route_id = simulation.buses.get(current_bus_processing).getRouteId();
             int next_stop_index = this.rewindList.get(i).getStopIndex();
             int next_stop_id = simulation.routes.get(this_route_id).getStopIdByIndex(next_stop_index);
-//            System.out.println(this_route_id + "b:" + current_bus_processing + "->s:" + next_stop_id);
         }
         return;
     }

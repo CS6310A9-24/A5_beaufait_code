@@ -7,7 +7,6 @@ public class BusCapacityChange extends BusChange {
         super(type, bus_id);
         this.new_capacity = new_capacity;
     }
-
     public int getNewCapacity() {
         return this.new_capacity;
     }
