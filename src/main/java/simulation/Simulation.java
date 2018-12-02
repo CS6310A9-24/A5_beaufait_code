@@ -339,7 +339,7 @@ public class Simulation {
         if (numPassengersWaiting < 0) {
             throw new RuntimeException("numPassengersWaiting is negative!");
         }
-        ui.stop_boxes.get(stop.getId()).setPaxInfo("passengersWating: " + String.valueOf(numPassengersWaiting));
+        ui.stop_boxes.get(stop.getId()).setPaxInfo("passengersWaiting: " + String.valueOf(numPassengersWaiting));
         System.out.println("number of people at station: " + numPassengersWaiting + "\n");
         stop.setNumPassengersWaiting(numPassengersWaiting);
     }

@@ -13,8 +13,8 @@ import java.util.Map;
 
 public class StopBox extends JPanel {
 
-    public static ImageIcon stop_icon = new ImageIcon("resources/images/bus_stop_img.png");
-    public static ImageIcon bus_icon = new ImageIcon("resources/images/bus_img.png");
+    public static ImageIcon stop_icon = new ImageIcon("bus_stop_img.png");
+    public static ImageIcon bus_icon = new ImageIcon("bus_img.png");
     private GridBagConstraints c = new GridBagConstraints();
     private JTextField bus_stop_info = new JTextField();
     private JLabel bus_stop_img = new JLabel(stop_icon);
