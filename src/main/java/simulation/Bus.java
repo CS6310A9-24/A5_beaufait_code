@@ -97,7 +97,7 @@ public class Bus {
             prevStopID = (Integer) (this.previousStops.get(this.previousStops.size()-2));
         }
 
-        System.out.println("Previous Stop: " + prevStopID + " Bus: " + this.id);
+//        System.out.println("Previous Stop: " + prevStopID + " Bus: " + this.id);
         return prevStopID;
     }
 
