@@ -104,7 +104,7 @@ public class BusChangeUI {
         //System.out.println(value);
 
         if (result == JOptionPane.OK_OPTION) {
-            System.out.println(optionList.getSelectedItem());
+//            System.out.println(optionList.getSelectedItem());
 
             switch (optionList.getSelectedItem().toString()){
                 case "Speed":

@@ -132,9 +132,9 @@ public class StopBox extends JPanel {
         }
 
         remove(compID);
-        System.out.println("Rem " + bus_id + " from stop " + this.stopID + " with size " + busTextFields.size());
+//        System.out.println("Rem " + bus_id + " from stop " + this.stopID + " with size " + busTextFields.size());
         busTextFields.remove(bus_id);
-        System.out.println("Removed " + bus_id + " from stop " + this.stopID + " with size " + busTextFields.size());
+//        System.out.println("Removed " + bus_id + " from stop " + this.stopID + " with size " + busTextFields.size());
         resize_box();
     }
 

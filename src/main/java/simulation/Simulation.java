@@ -35,8 +35,8 @@ public class Simulation {
     public void setup(String[] args) {
 
         final String DELIMITER = ",";
-        String scenarioFile = args[0];
-        //String scenarioFile = "resources/test_scenario.txt";
+//        String scenarioFile = args[0];
+        String scenarioFile = "resources/test_scenario.txt";
         // Step 1: Read the data from the provided scenario configuration file.
         try {
             Scanner takeCommand = new Scanner(new File(scenarioFile));
@@ -90,8 +90,8 @@ public class Simulation {
 
         // Step 2: Read the data from the provided passenger probabilities file
         final String PASSENGER_PROBABILITY_DELIMITER = ",";
-        String probabilityFile = args[1];
-        //String probabilityFile = "resources/test_evening_distibution.csv";
+//        String probabilityFile = args[1];
+        String probabilityFile = "resources/test_evening_distibution.csv";
         try {
             Scanner takeCommand = new Scanner(new File(probabilityFile));
             String[] tokens;
@@ -228,7 +228,7 @@ public class Simulation {
 
     // pre: bus route has not changed
     public void rewind() {
-        if (!queue.replay_flag) {
+        if (queue.replay_flag == false) {
             System.out.println("Cannot rewind: either you (1) changed the route, (2) tried to rewind more than the number of times you moved buses OR (2) you tried to rewind more than three consecutive times");
             return;
         }
@@ -268,59 +268,69 @@ public class Simulation {
 
         // remove the just applied RewindEvnt object from the rewind list
         int ind = 0;
-        ui.currEventTime_text.setText("" + queue.rewindList.get(1).getRank());
+        System.out.println("number of rewinds before deletion" + queue.rewindList.size());
+//        ui.currEventTime_text.setText("" + queue.rewindList.get(0).getRank());
         queue.rewindList.remove(ind);
+        System.out.println("number of rewinds after deletion" + queue.rewindList.size());
         if (queue.rewindList.isEmpty()) {
+            System.out.println("setting replay flag to false");
             queue.replay_flag = false;
         }
     }
 
     public void passengerExchange(Bus bus, Stop stop) {
         int numPassengersWaiting = stop.getNumPassengersWaiting();
-        //System.out.println("numPassengersWaiting at station: " + numPassengersWaiting);
+        System.out.println("numPassengersWaiting at station: " + numPassengersWaiting);
 
         // passengers arrive
         numPassengersWaiting += stop.newPassengersArrive();
-        //System.out.println("numPassengersWaiting at station after passengers arrive: " + numPassengersWaiting);
+        System.out.println("numPassengersWaiting at station after passengers arrive: " + numPassengersWaiting);
 
         // numPassengersTransfers passengers get off the bus
         int bus_capacity = bus.getMaxCapacity();
-        int numPassengersTransfers = stop.unloadPassengersfromBus(); // num that should get off bus
-        //System.out.println("num should get off bus: " + numPassengersTransfers);
+        int numexcessPassengersOnBus = 0; //number of excess passengers on bus (non-zero only if the client decreased bus capacity)
         int numPassengersRiding = bus.getNumPassengersRiding(); //num actually on bus
-        //System.out.println("num actually on bus: " + numPassengersRiding);
+        System.out.println("num actually on bus: " + numPassengersRiding);
+        if (numPassengersRiding > bus_capacity) { // no more than bus_capacity can stay on the bus
+            numexcessPassengersOnBus  += numPassengersRiding - bus_capacity;
+            System.out.println("bus capacity decreased! number of excess passengers getting off bus immediately: " + numexcessPassengersOnBus);
+            bus.setNumPassengersRiding(bus_capacity);
+            numPassengersRiding = bus.getNumPassengersRiding(); // need to re-get numPassengersRiding
+            System.out.println("bus capacity [and numPassengersRiding] is now: " + bus_capacity);
+        }
+        int numPassengersTransfers = stop.unloadPassengersfromBus();
+        System.out.println("number of passengers that should get off bus" + numPassengersTransfers);
+
         if (numPassengersTransfers >  numPassengersRiding) { // only as many riders on the bus can get off
             numPassengersTransfers = numPassengersRiding;
         }
-        if (numPassengersRiding - numPassengersTransfers > bus_capacity) { // no more than bus_capacity can stay on the bus
-            numPassengersTransfers  = numPassengersRiding - bus_capacity;
-        }
-        //System.out.println("actual num getting off bus: " + numPassengersTransfers);
+        System.out.println("actual num getting off bus: " + numPassengersTransfers);
         bus.subtractRiders(numPassengersTransfers);
 
         // passengers get on the bus
         int num_riders_on = stop.loadPassengersfromStop(); //num that should get on the bus
+        System.out.println("number of passengers that should get on bus" + num_riders_on);
         if (num_riders_on > numPassengersWaiting) { // only as many people in the waiting group can get on the bus
             num_riders_on = numPassengersWaiting;
         }
         int num_avail_seats = bus.getNumAvailableSeats();
-        //System.out.println("num_avail_seats: " + num_avail_seats);
+        System.out.println("num_avail_seats: " + num_avail_seats);
         if (num_riders_on > num_avail_seats) { //no more than num_avail_seats can get on the bus
             num_riders_on = num_avail_seats;
         }
-        //System.out.println("actual num getting on bus: " + num_riders_on);
+        System.out.println("actual num getting on bus: " + num_riders_on);
 
 
         numPassengersWaiting -= num_riders_on; // subtract from num waiting group
-        //System.out.println("num waiting at station after passengers get on bus: " + numPassengersWaiting);
+        System.out.println("num waiting at station after passengers get on bus: " + numPassengersWaiting);
 
         bus.addRiders(num_riders_on); // add riders to the bus
-        //System.out.println("num riders on bus after people get on: " + bus.getNumPassengersRiding());
+        System.out.println("num riders on bus after people get on: " + bus.getNumPassengersRiding());
 
 
         // passengers depart station
         int total_people_at_station = numPassengersTransfers + numPassengersWaiting;
-        //System.out.println("total people at station: " + total_people_at_station);
+        System.out.println("total people at station: " + total_people_at_station);
 
         int num_passengers_depart = stop.passengersDepartStop();
         //System.out.println("number of people that should depart: " + num_passengers_depart);
@@ -328,7 +338,7 @@ public class Simulation {
         if (num_passengers_depart > total_people_at_station) { // no more than the number of people at the station can depart the station
             num_passengers_depart = total_people_at_station;
         }
-        //System.out.println("number of people that depart: " + num_passengers_depart);
+        System.out.println("number of people that depart: " + num_passengers_depart);
         if (num_passengers_depart <= numPassengersTransfers) { // transfer group is absorbed by waiting group
             numPassengersTransfers -= num_passengers_depart;
             numPassengersWaiting += numPassengersTransfers;
@@ -341,7 +351,7 @@ public class Simulation {
             throw new RuntimeException("numPassengersWaiting is negative!");
         }
         ui.stop_boxes.get(stop.getId()).setPaxInfo("passengersWating: " + String.valueOf(numPassengersWaiting));
-        //System.out.println("number of people at station: " + numPassengersWaiting + "\n");
+        System.out.println("number of people at station: " + numPassengersWaiting + "\n");
         stop.setNumPassengersWaiting(numPassengersWaiting);
     }
 
