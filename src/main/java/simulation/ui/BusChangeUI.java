@@ -37,8 +37,11 @@ public class BusChangeUI {
 
         JPanel p = new JPanel();
         p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
-        JTextField input = new JTextField();
-        input.setVisible(false);
+        JTextField speedInput = new JTextField();
+        JTextField capacityInput = new JTextField();
+        speedInput.setVisible(false);
+        capacityInput.setVisible(false);
+
 
         optionList.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
@@ -47,15 +50,17 @@ public class BusChangeUI {
                 Object selected = optionList.getSelectedItem();
                 if(selected.toString().equals("Speed")) {
                     //System.out.println("Speed");
-                    input.setVisible(true);
+                    speedInput.setVisible(true);
                     routeList.setVisible(false);
                     stopList.setVisible(false);
+                    capacityInput.setVisible(false);
                     p.revalidate();
                     p.repaint();
                 }
                 if(selected.toString().equals("Route")) {
                     //System.out.println("Route");
-                    input.setVisible(false);
+                    speedInput.setVisible(false);
+                    capacityInput.setVisible(false);
                     routeList.addItem("");
                     for(int i = 0; i < Simulation.getRouteIDs().size(); i++){
                         routeList.addItem(Simulation.routeIDs.get(i));
@@ -78,9 +83,12 @@ public class BusChangeUI {
                 }
                 if(selected.toString().equals("Capacity")) {
                     //System.out.println("Capacity");
-                    input.setVisible(true);
+                    capacityInput.setVisible(true);
+                    speedInput.setVisible(false);
                     routeList.setVisible(false);
                     stopList.setVisible(false);
+                    p.revalidate();
+                    p.repaint();
                 }
             }
         });
@@ -88,7 +96,8 @@ public class BusChangeUI {
         p.add(optionList);
         p.add(routeList);
         p.add(stopList);
-        p.add(input);
+        p.add(speedInput);
+        p.add(capacityInput);
 
         int result = JOptionPane.showConfirmDialog(null, p,"Change bus # " + this.bus_id, JOptionPane.OK_CANCEL_OPTION);
         //int value = Integer.parseInt(input.getText());
@@ -99,12 +108,12 @@ public class BusChangeUI {
 
             switch (optionList.getSelectedItem().toString()){
                 case "Speed":
-                    int newSpeed = Integer.parseInt(input.getText());
+                    int newSpeed = Integer.parseInt(speedInput.getText());
                     Simulation.addBusSpeedChange(this.bus_id, newSpeed);
                     break;
 
                 case "Capacity":
-                    int newCapacity = Integer.parseInt(input.getText());
+                    int newCapacity = Integer.parseInt(capacityInput.getText());
                     Simulation.addBusCapacityChange(this.bus_id, newCapacity);
                     break;
 

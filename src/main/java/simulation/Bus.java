@@ -101,6 +101,13 @@ public class Bus {
         return prevStopID;
     }
 
+    public int getRewindPrevStopID(){
+        int prevStopID = (Integer)(this.previousStops.get(this.previousStops.size()-3));
+
+        this.previousStops.remove(this.previousStops.size() -1);
+        return prevStopID;
+    }
+
     public Stop getCurrentStop() {
         int current_stop_id = simulation.routes.get(this.routeId).getStopIdByIndex(this.routeIndex);
         return simulation.stops.get(current_stop_id);

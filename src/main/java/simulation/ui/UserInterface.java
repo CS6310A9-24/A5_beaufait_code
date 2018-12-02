@@ -36,6 +36,7 @@ public class UserInterface {
     JTextField k_combined_text = new JTextField("1.0");
     JButton k_combined_button = new JButton("Update Combined");
     JButton efficiency_button = new JButton("Refresh efficiency");
+    public static JTextField currEventTime_text = new JTextField("0");
 
     JPanel constantPanel = new JPanel(new GridLayout(2, 6, 2, 2));
 
@@ -85,6 +86,7 @@ public class UserInterface {
         status_layout.add(k_buses_text);
         status_layout.add(k_combined_text);
         status_layout.add(system_efficiency_text);
+        status_layout.add(currEventTime_text);
 
         status_layout.add(k_speed_button);
         status_layout.add(k_capacity_button);
@@ -92,6 +94,8 @@ public class UserInterface {
         status_layout.add(k_buses_button);
         status_layout.add(k_combined_button);
         status_layout.add(efficiency_button);
+        JLabel blank = new JLabel("Current Time");
+        status_layout.add(blank);
         system_efficiency_text.setEditable(false);
         system_efficiency_text.setText("System Efficiency");
 
@@ -146,18 +150,17 @@ public class UserInterface {
         int current_stopID = simulation.getRoutes().get(simulation.getBuses().get(current_bus_processing).getRouteId()).getStopIdByIndex(simulation.getBuses().get(current_bus_processing).getRouteIndex());
         //int previous_stopID = simulation.getRoutes().get(simulation.getBuses().get(current_bus_processing).getRouteId()).getStopIdByIndex(simulation.getBuses().get(current_bus_processing).getPreviousRouteIndex());
         int previous_stopID = simulation.buses.get(current_bus_processing).getPreviousStopID();
-        String s = "b:" + current_bus_processing + "->s:" + next_stop_id + "@" + next_time + "//p:" + next_passengers + "/f:0";
+        String s = "b:" + current_bus_processing + "->s:" + next_stop_id + "@" + next_time + "//p:" + next_passengers;
 
 
-        System.out.println("current_stopID: " + current_stopID);
-        System.out.println("previous_stopID:" + previous_stopID);
+        //System.out.println("current_stopID: " + current_stopID);
+        //System.out.println("previous_stopID:" + previous_stopID);
         stop_boxes.get(current_stopID).add_busTextField(current_bus_processing, s);
         stop_boxes.get(current_stopID).show_buses();
 
         //run logic for previous stop
-        System.out.println(simulation.buses.get(current_bus_processing).getIsFirstStop());
+        //System.out.println(simulation.buses.get(current_bus_processing).getIsFirstStop());
         if (simulation.buses.get(current_bus_processing).getIsFirstStop() == false) {
-            System.out.println("In this shit");
             stop_boxes.get(previous_stopID).updateBusInfo(current_bus_processing);
         }
 
@@ -169,6 +172,26 @@ public class UserInterface {
         stop_boxes.get(previous_stopID).revalidate();
         stop_boxes.get(current_stopID).repaint();
         stop_boxes.get(previous_stopID).repaint();
+    }
+
+    public void move_bus_rewind(){
+        int current_bus_processing = simulation.getCurrent_bus_processing();
+        int current_stopID = simulation.buses.get(current_bus_processing).getPreviousStopID();
+        int next_stop_id = simulation.getNext_stop_id();
+        int next_time = simulation.getNext_time();
+        int next_passengers = simulation.getNext_passengers();
+
+        System.out.println("Rewind curr stop id: " + current_stopID);
+        String s = "b:" + current_bus_processing + "->s:" + next_stop_id + "@" + next_time + "//p:" + next_passengers;
+
+        int previous_stopID = simulation.buses.get(current_bus_processing).getRewindPrevStopID();
+        //System.out.println("prev curr stop id: " + previous_stopID);
+        stop_boxes.get(previous_stopID).add_busTextField(current_bus_processing, s);
+        stop_boxes.get(previous_stopID).show_buses();
+        stop_boxes.get(current_stopID).updateBusInfo(current_bus_processing);
+        stop_boxes.get(current_stopID).show_buses();
+
+        System.out.println("prev curr stop id: " + previous_stopID);
     }
 
     public void updateSystemEfficiency(String text) {
